@@ -3,6 +3,12 @@ package com.way.service;
 import java.util.HashSet;
 import java.util.List;
 
+import org.jivesoftware.smack.AccountManager;
+import org.jivesoftware.smack.Connection;
+import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
+
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
 import android.app.AlarmManager;
@@ -17,6 +23,7 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.way.activity.BaseActivity;
 import com.way.activity.BaseActivity.BackPressHandler;
@@ -35,6 +42,7 @@ import com.way.xx.R;
 
 public class XXService extends BaseService implements EventHandler,
 		BackPressHandler {
+	private static final String TAG = "XXService";
 	public static final int CONNECTED = 0;
 	public static final int DISCONNECTED = -1;
 	public static final int CONNECTING = 1;
@@ -42,6 +50,8 @@ public class XXService extends BaseService implements EventHandler,
 	public static final String NETWORK_ERROR = "network error";// 网络错误
 	public static final String LOGOUT = "logout";// 手动退出
 	public static final String LOGIN_FAILED = "login failed";// 登录失败
+	public static final String REGISTER_CONFLICT = "The user name has been registered";
+	
 	public static final String DISCONNECTED_WITHOUT_WARNING = "disconnected without warning";// 没有警告的断开连接
 
 	private IBinder mBinder = new XXBinder();
@@ -263,6 +273,7 @@ public class XXService extends BaseService implements EventHandler,
 	 * @param reason
 	 */
 	public void postConnectionFailed(final String reason) {
+		Log.d(TAG, "postConnectionFailed");
 		mMainHandler.post(new Runnable() {
 			public void run() {
 				connectionFailed(reason);
@@ -569,4 +580,45 @@ public class XXService extends BaseService implements EventHandler,
 		L.i("activity onPause ...");
 		mMainHandler.postDelayed(monitorStatus, 1000L);
 	}
+
+	public void createAccount(final String account, final String password) {
+		// TODO Auto-generated method stub
+		new Thread(new Runnable() {
+				
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					Log.d(TAG,"createAccount");
+					ConnectionConfiguration config = new ConnectionConfiguration("192.168.1.102",5222);
+					Connection connection = new XMPPConnection(config);
+					                try {
+										connection.connect();
+									} catch (XMPPException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									} catch(Exception e){
+										Log.d(TAG,"createAccount->exception1:"+e);
+									}
+					AccountManager amgr = connection.getAccountManager();
+					try {
+						amgr.createAccount(account, password);
+					} catch (XMPPException e) {
+						// TODO Auto-generated catch block
+						Log.d(TAG,"createAccount->exception2:"+e);
+						if("conflict(409)".equals(e.toString())){
+							Log.d(TAG,"createAccount->REGISTER_CONFLICT:");							
+							postConnectionFailed(REGISTER_CONFLICT);
+						}
+						e.printStackTrace();
+						return;
+					}	catch(Exception e){
+						Log.d(TAG,"createAccount->exception3:"+e);
+					}
+					
+					
+					postConnectionScuessed();
+					
+				}
+			}).start();
+		}
 }

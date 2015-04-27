@@ -129,6 +129,29 @@
                     android:textColor="#ffffffff"
                     android:textSize="17.0sp" />
             </LinearLayout>
+            <LinearLayout
+                android:id="@+id/registerlayout"
+                android:layout_width="fill_parent"
+                android:layout_height="50.0dip"
+                android:layout_alignLeft="@id/input"
+                android:layout_alignRight="@id/input"
+                android:layout_below="@id/loginlayout"
+                android:layout_marginTop="5.0dip"
+                android:padding="1.0dip" >
+
+                <Button
+                    android:id="@+id/register"
+                    style="@style/login_Font"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/chat_send_button_bg"
+                    android:gravity="center"
+                    android:onClick="onRegisterClick"
+                    android:text="@string/register"
+                    android:textColor="#ffffffff"
+                    android:textSize="17.0sp" />
+            </LinearLayout>
+                      
         </RelativeLayout>
 
         <LinearLayout
@@ -137,6 +160,7 @@
             android:layout_marginLeft="32.0dip"
             android:layout_marginRight="32.0dip"
             android:layout_marginTop="15.0dip"
+            android:visibility="gone"            
             android:orientation="horizontal" >
 
             <CheckBox
@@ -169,6 +193,7 @@
             android:layout_marginBottom="15.0dip"
             android:layout_marginLeft="32.0dip"
             android:layout_marginRight="32.0dip"
+            android:visibility="gone"
             android:orientation="horizontal" >
 
             <CheckBox

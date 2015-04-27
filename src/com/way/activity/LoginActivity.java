@@ -181,6 +181,27 @@ public class LoginActivity extends FragmentActivity implements
 		}
 	}
 
+	public void onRegisterClick(View v) {
+		mAccount = mAccountEt.getText().toString();
+		mAccount = splitAndSaveServer(mAccount);
+		mPassword = mPasswordEt.getText().toString();
+		if (TextUtils.isEmpty(mAccount)) {
+			T.showShort(this, R.string.null_account_prompt);
+			return;
+		}
+		if (TextUtils.isEmpty(mPassword)) {
+			T.showShort(this, R.string.password_input_prompt);
+			return;
+		}
+		if (mLoginOutTimeProcess != null && !mLoginOutTimeProcess.running)
+			mLoginOutTimeProcess.start();
+		if (mLoginDialog != null && !mLoginDialog.isShowing())
+			mLoginDialog.show();
+		if (mXxService != null) {
+			mXxService.createAccount(mAccount, mPassword);
+		}
+	}	
+	
 	private String splitAndSaveServer(String account) {
 		if (!account.contains("@"))
 			return account;
@@ -229,14 +250,14 @@ public class LoginActivity extends FragmentActivity implements
 
 	@Override
 	public void afterTextChanged(Editable s) {
-		try {
-			XMPPHelper.verifyJabberID(s);
-			mLoginBtn.setEnabled(true);
-			mAccountEt.setTextColor(Color.parseColor("#ff333333"));
-		} catch (XXAdressMalformedException e) {
-			mLoginBtn.setEnabled(false);
-			mAccountEt.setTextColor(Color.RED);
-		}
+//		try {
+//			XMPPHelper.verifyJabberID(s);
+//			mLoginBtn.setEnabled(true);
+//			mAccountEt.setTextColor(Color.parseColor("#ff333333"));
+//		} catch (XXAdressMalformedException e) {
+//			mLoginBtn.setEnabled(false);
+//			mAccountEt.setTextColor(Color.RED);
+//		}
 	}
 
 	private void save2Preferences() {

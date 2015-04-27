@@ -317,6 +317,7 @@
     <string name="sysmsg_you_are_agree_someone_add_troop">我已同意该申请</string>
     <string name="sysmsg_you_are_refuse_someone_add_troop">我已拒绝该申请</string>
     <string name="login">登 录</string>
+	<string name="register">注册</string>    
     <string name="account">帐号</string>
     <string name="password">密码</string>
     <string name="login_prompt">登录中</string>
@@ -690,7 +691,7 @@
     <string name="find_format_invalid">帐号格式非法</string>
     <string name="sending_request">正在发送请求</string>
     <string name="refuse_adding_friend">对方拒绝被添加</string>
-    <string name="request_failed">登录失败:</string>
+    <string name="request_failed">失败:</string>
     <string name="request_send_ok">请求发送成功！</string>
     <string name="request_send_failed">请求发送失败！</string>
     <string name="send_ok">发送成功</string>

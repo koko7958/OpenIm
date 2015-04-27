@@ -2,8 +2,8 @@ package com.way.util;
 
 public class PreferenceConstants {
 	
-//	public static final String GMAIL_SERVER = "124.205.228.186";
-	public static final String GMAIL_SERVER = "talk.google.com";
+	public static final String GMAIL_SERVER = "192.168.1.102";
+//	public static final String GMAIL_SERVER = "talk.google.com";
 	public final static String ISNEEDLOG = "isneedlog";
 	public final static String REPORT_CRASH = "reportcrash";
 	public final static String ACCOUNT = "account";
