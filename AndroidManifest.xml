@@ -74,6 +74,19 @@
             android:theme="@style/Default.SwipeBack.NoTitleBar"
             android:windowSoftInputMode="stateHidden|adjustResize" >
         </activity>
+        <!-- 
+        author : wangcheng
+        date : 2015/04/28
+        purpose : add a new activity for my user information setting        
+         -->
+        <activity
+            android:name="com.way.activity.UserInforSettingActivity"
+            android:screenOrientation="portrait"
+        
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
+        
+        
         <activity
             android:name="com.way.activity.FeedBackActivity"
             android:alwaysRetainTaskState="true"

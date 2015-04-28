@@ -30,6 +30,14 @@ import com.way.util.XMPPHelper;
 import com.way.view.CustomDialog;
 import com.way.xx.R;
 
+/*
+ * author : wangcheng
+ * date : 2015/04/28
+ * import new activity class of user/account information setting
+ */
+import com.way.activity.UserInforSettingActivity;
+
+
 public class SettingsFragment extends Fragment implements OnClickListener,
 		OnCheckedChangeListener {
 	private TextView mTitleNameView;
@@ -232,10 +240,23 @@ public class SettingsFragment extends Fragment implements OnClickListener,
 			startActivity(new Intent(getActivity(), AboutActivity.class));
 			break;
 		case R.id.exit_app:
+/*
+ * author : wangcheng
+ * date :  20150426
+ * purpose : replace another logout method 
+ */
+	
+/******OLD method************
 			if (mExitDialog == null)
 				mExitDialog = DialogUtil.getMenuDialog(getActivity(),
 						mExitMenuView);
 			mExitDialog.show();
+			
+*/
+
+/**********NEW method*************/
+			logoutDialog();
+			
 			break;
 		case R.id.btnCancel:
 			if (mExitDialog != null && mExitDialog.isShowing())
@@ -253,7 +274,20 @@ public class SettingsFragment extends Fragment implements OnClickListener,
 			getActivity().finish();
 			break;
 		case R.id.accountSetting:
-			logoutDialog();
+/*
+* author : wangcheng
+* date :  20150426
+* purpose : remove logout, and replacing by user information 
+*/
+
+/******OLD ************
+			logoutDialog();			
+*/
+
+/**********NEW *************/
+			System.out.println("用户个人信息显示");
+			startActivity(new Intent(getActivity(), UserInforSettingActivity.class));
+			
 			break;
 		default:
 			break;
