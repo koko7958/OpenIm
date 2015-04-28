@@ -2,7 +2,8 @@ package com.way.util;
 
 public class PreferenceConstants {
 	
-	public static final String GMAIL_SERVER = "192.168.1.102";
+	public static final String GMAIL_SERVER = "koko3380.xicp.net";
+	public static final String DEFAULT_SERVER = "koko3380.xicp.net";	
 //	public static final String GMAIL_SERVER = "talk.google.com";
 	public final static String ISNEEDLOG = "isneedlog";
 	public final static String REPORT_CRASH = "reportcrash";
@@ -27,8 +28,10 @@ public class PreferenceConstants {
 	public final static String PORT = "account_port";
 	public final static String RESSOURCE = "account_resource";
 	public final static String PRIORITY = "account_prio";
-	public final static String DEFAULT_PORT = "5222";
-	public final static int DEFAULT_PORT_INT = 5222;
+//	public final static String DEFAULT_PORT = "5222";
+//	public final static int DEFAULT_PORT_INT = 5222;
+	public final static String DEFAULT_PORT = "29003";
+	public final static int DEFAULT_PORT_INT = 29003;
 	public final static String CONN_STARTUP = "connstartup";
 	public final static String AUTO_RECONNECT = "reconnect";
 	public final static String MESSAGE_CARBONS = "carbons";

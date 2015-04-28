@@ -13,6 +13,7 @@ import org.jivesoftware.smack.RosterListener;
 import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.filter.PacketFilter;
 import org.jivesoftware.smack.filter.PacketTypeFilter;
 import org.jivesoftware.smack.packet.IQ;
 import org.jivesoftware.smack.packet.IQ.Type;
@@ -62,6 +63,7 @@ import com.way.util.StatusMode;
 import com.way.xx.R;
 
 public class SmackImpl implements Smack {
+	private static final String TAG = "SmackImpl";	
 	public static final String XMPP_IDENTITY_NAME = "xx";
 	public static final String XMPP_IDENTITY_TYPE = "phone";
 	private static final int PACKET_TIMEOUT = 30000;
@@ -141,12 +143,19 @@ public class SmackImpl implements Smack {
 				PreferenceConstants.SMACKDEBUG, false);
 		boolean requireSsl = PreferenceUtils.getPrefBoolean(service,
 				PreferenceConstants.REQUIRE_TLS, false);
-		if (customServer.length() > 0
-				|| port != PreferenceConstants.DEFAULT_PORT_INT)
-			this.mXMPPConfig = new ConnectionConfiguration(customServer, port,
-					server);
-		else
-			this.mXMPPConfig = new ConnectionConfiguration(server); // use SRV
+		
+		Log.d(TAG, "SmackImpl->port:"+port);
+
+		this.mXMPPConfig = new ConnectionConfiguration(PreferenceConstants.DEFAULT_SERVER, PreferenceConstants.DEFAULT_PORT_INT,
+				PreferenceConstants.DEFAULT_SERVER);		
+		
+		
+//		if (customServer.length() > 0
+//				|| port != PreferenceConstants.DEFAULT_PORT_INT)
+//			this.mXMPPConfig = new ConnectionConfiguration(customServer, port,
+//					server);
+//		else
+//			this.mXMPPConfig = new ConnectionConfiguration(server); // use SRV
 
 		this.mXMPPConfig.setReconnectionAllowed(false);
 		this.mXMPPConfig.setSendPresence(false);
@@ -175,6 +184,7 @@ public class SmackImpl implements Smack {
 			SmackConfiguration.setKeepAliveInterval(-1);
 			SmackConfiguration.setDefaultPingInterval(0);
 			registerRosterListener();// 监听联系人动态变化
+			registerSubscriptionListener();			
 			mXMPPConnection.connect();
 			if (!mXMPPConnection.isConnected()) {
 				throw new XXException("SMACK connect failed without exception!");
@@ -509,6 +519,33 @@ public class SmackImpl implements Smack {
 	}
 
 	/***************** end 发送离线消息 ***********************/
+	
+	public void registerSubscriptionListener() {      
+		PacketFilter packetFilter = new PacketTypeFilter(Presence.class);      
+		PacketListener subscribeListener = new PacketListener(){      
+	     
+            @Override      
+            public void processPacket(Packet packet) {      
+            	Log.d(TAG,"PresenceListener->processPacket");
+                final Presence presence = (Presence)packet;      
+                if (presence.getType().equals(Presence.Type.subscribe)) {
+                	Log.d(TAG,"PresenceListener->subscribe");
+                	
+                	Presence replyPresence = new Presence(Presence.Type.unsubscribe);//同意是
+                	replyPresence.setTo(presence.getFrom());
+                	replyPresence.setFrom(presence.getTo());
+                	mXMPPConnection.sendPacket(replyPresence);
+                	
+                } else if (presence.getType().equals(Presence.Type.unsubscribe)) {      
+                	Log.d(TAG,"PresenceListener->unsubscribe");
+                }      
+  
+            }      
+                
+		};      
+		mXMPPConnection.addPacketListener(subscribeListener, packetFilter);      
+	}  
+	
 	/******************************* start 联系人数据库事件处理 **********************************/
 	private void registerRosterListener() {
 		mRoster = mXMPPConnection.getRoster();
@@ -561,6 +598,7 @@ public class SmackImpl implements Smack {
 			}
 		};
 		mRoster.addRosterListener(mRosterListener);
+		mRoster.setSubscriptionMode(Roster.SubscriptionMode.manual);
 	}
 
 	private String getJabberID(String from) {
