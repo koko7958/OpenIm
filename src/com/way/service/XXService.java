@@ -159,6 +159,7 @@ public class XXService extends BaseService implements EventHandler,
 					PreferenceConstants.ACCOUNT, "");
 			String password = PreferenceUtils.getPrefString(XXService.this,
 					PreferenceConstants.PASSWORD, "");
+			
 			if (!TextUtils.isEmpty(account) && !TextUtils.isEmpty(password))
 				Login(account, password);
 		}
@@ -407,8 +408,39 @@ public class XXService extends BaseService implements EventHandler,
 		if (mConnectionStatusCallback != null)
 			mConnectionStatusCallback.connectionStatusChanged(mConnectedState,
 					"");
+		increaseLoginTimes();// when login successful, increase login times.
+		
+//		if(1 == getLoginTimes()){
+			addPresetRoster();			
+//		}
+		
 	}
 
+	
+	private void addPresetRoster() {
+		// TODO Auto-generated method stub
+		
+		final String rosterId = PreferenceConstants.DEFAULT_JABBER+"@"+PreferenceConstants.DEFAULT_SERVER;
+		final String rosterNickName = PreferenceConstants.DEFAULT_JABBER;
+		final String rosterGroup = PreferenceConstants.DEFAULT_JABBER;
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				addRosterItem(rosterId, rosterNickName, rosterGroup);
+			}
+		}).start();
+	}
+
+	private void increaseLoginTimes(){
+		PreferenceUtils.setPrefInt(this, PreferenceConstants.LOGIN_TIMES, getLoginTimes()+1);
+	}
+		
+	private int getLoginTimes(){
+		return PreferenceUtils.getPrefInt(this, PreferenceConstants.LOGIN_TIMES, 0);
+	}
+	
 	// 连接中，通知界面线程做一些处理
 	private void postConnecting() {
 		// TODO Auto-generated method stub

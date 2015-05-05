@@ -59,6 +59,7 @@ import com.way.service.XXService;
 import com.way.util.L;
 import com.way.util.PreferenceConstants;
 import com.way.util.PreferenceUtils;
+import com.way.util.ReplyMessage;
 import com.way.util.StatusMode;
 import com.way.xx.R;
 
@@ -184,7 +185,7 @@ public class SmackImpl implements Smack {
 			SmackConfiguration.setKeepAliveInterval(-1);
 			SmackConfiguration.setDefaultPingInterval(0);
 			registerRosterListener();// 监听联系人动态变化
-			registerSubscriptionListener();			
+//			registerSubscriptionListener();			
 			mXMPPConnection.connect();
 			if (!mXMPPConnection.isConnected()) {
 				throw new XXException("SMACK connect failed without exception!");
@@ -255,11 +256,13 @@ public class SmackImpl implements Smack {
 
 		mPacketListener = new PacketListener() {
 			public void processPacket(Packet packet) {
+				Log.d("lzctest", " processPacket:"+packet);
 				try {
 					if (packet instanceof Message) {
 						Message msg = (Message) packet;
 						String chatMessage = msg.getBody();
-
+						Log.d("lzctest", " Message:"+msg);
+						handleAutoReply(msg);
 						// try to extract a carbon
 						Carbon cc = CarbonManager.getCarbon(msg);
 						if (cc != null
@@ -268,6 +271,9 @@ public class SmackImpl implements Smack {
 							msg = (Message) cc.getForwarded()
 									.getForwardedPacket();
 							chatMessage = msg.getBody();
+							Log.d("lzctest", "new message:"+msg.getBody());
+							handleAutoReply(msg);
+							
 							// fall through
 						} else if (cc != null
 								&& cc.getDirection() == Carbon.Direction.sent) {
@@ -323,6 +329,15 @@ public class SmackImpl implements Smack {
 		};
 
 		mXMPPConnection.addPacketListener(mPacketListener, filter);
+	}
+
+	protected void handleAutoReply(Message msg) {
+		// TODO Auto-generated method stub
+		
+//		if(ReplyMessage.needAutoReply(mService)){
+			
+			sendMessage(msg.getFrom(), ReplyMessage.getReplyMessage(msg.getBody()));						
+//		}		
 	}
 
 	private void addChatMessageToDB(int direction, String JID, String message,
@@ -598,7 +613,7 @@ public class SmackImpl implements Smack {
 			}
 		};
 		mRoster.addRosterListener(mRosterListener);
-		mRoster.setSubscriptionMode(Roster.SubscriptionMode.manual);
+//		mRoster.setSubscriptionMode(Roster.SubscriptionMode.accept_all);//设置添加联系人权限
 	}
 
 	private String getJabberID(String from) {

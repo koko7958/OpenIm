@@ -4,6 +4,8 @@ public class PreferenceConstants {
 	
 	public static final String GMAIL_SERVER = "koko3380.xicp.net";
 	public static final String DEFAULT_SERVER = "koko3380.xicp.net";	
+//	public static final String GMAIL_SERVER = "192.168.1.102";
+//	public static final String DEFAULT_SERVER = "192.168.1.102";		
 //	public static final String GMAIL_SERVER = "talk.google.com";
 	public final static String ISNEEDLOG = "isneedlog";
 	public final static String REPORT_CRASH = "reportcrash";
@@ -12,8 +14,11 @@ public class PreferenceConstants {
 	public final static String Server = "server";
 	public final static String AUTO_START = "auto_start";
 	public final static String SHOW_MY_HEAD= "show_my_head";
+	public final static String LOGIN_TIMES = "login_times";	
 	
 	public final static String APP_VERSION= "app_version";
+	
+	public final static String DEFAULT_JABBER = "jabber";
 	
 	
 	public final static String OFFLINE = "offline";
@@ -47,4 +52,14 @@ public class PreferenceConstants {
 	public final static String STATUS_MODE = "status_mode";
 	public final static String STATUS_MESSAGE = "status_message";
 	public final static String THEME = "theme";
+	
+	/*author : wangcheng
+	 *date : 2015/05/04
+	*/
+	public final static String MY_NICKNAME = "nickname"; 
+	public final static String MY_ADRESS = "adress"; 
+	public final static String MY_SEX = "sex"; 
+	public final static String MY_DISTRICT = "district"; 
+	public final static String MY_SIGNATURE = "signature"; 
+
 }

@@ -285,6 +285,14 @@ public class LoginActivity extends FragmentActivity implements
 			PreferenceUtils.setPrefString(this,
 					PreferenceConstants.STATUS_MODE,
 					PreferenceConstants.AVAILABLE);
+		
+		/*author : wangcheng
+		 *date : 2015/05/04
+		*/
+		//PreferenceUtils.setPrefString(this, PreferenceConstants.MY_ADRESS, mPassword);
+		//PreferenceUtils.setPrefString(this, PreferenceConstants.MY_SEX, mPassword);
+		//PreferenceUtils.setPrefString(this, PreferenceConstants.MY_DISTRICT, mPassword);
+		//PreferenceUtils.setPrefString(this, PreferenceConstants.MY_SIGNATURE, mPassword);
 	}
 
 	// 登录超时处理线程
