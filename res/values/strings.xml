@@ -250,7 +250,7 @@
     <string name="confirm">确认</string>
     <string name="select_album">选择相册</string>
     <string name="low_storage_warning">手机（或SD卡）存储空间已满，手机QQ的部分功能可能会无法使用，请及时清理</string>
-    <string name="app_name">XMPP</string>
+    <string name="app_name">OpenIM</string>
     <string name="group_online">在线好友</string>
     <string name="run_bg_ticker">XMPP正在后台运行</string>
     <string name="failedconnection">网络连接不可用，请检查网络设置。</string>

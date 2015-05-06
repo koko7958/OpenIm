@@ -78,7 +78,7 @@ public class ReplyMessage{
 		int i;
 		
 		for(i=0; i<keySet.length; i++){
-			if(incommingMsg.contains(keySet[i])){
+			if(incommingMsg != null && incommingMsg.contains(keySet[i])){
 				break;
 			}		
 		}

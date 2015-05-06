@@ -225,6 +225,8 @@ public class SmackImpl implements Smack {
 			throw new XXException(e.getLocalizedMessage(), e.getCause());
 		}
 		registerAllListener();// 注册监听其他的事件，比如新消息
+		System.out.println("jid:"+mXMPPConnection.getUser());
+
 		return mXMPPConnection.isAuthenticated();
 	}
 
@@ -261,8 +263,8 @@ public class SmackImpl implements Smack {
 					if (packet instanceof Message) {
 						Message msg = (Message) packet;
 						String chatMessage = msg.getBody();
-						Log.d("lzctest", " Message:"+msg);
-						handleAutoReply(msg);
+//						Log.d("lzctest", " Message:"+msg);
+//						handleAutoReply(msg);
 						// try to extract a carbon
 						Carbon cc = CarbonManager.getCarbon(msg);
 						if (cc != null
@@ -271,8 +273,8 @@ public class SmackImpl implements Smack {
 							msg = (Message) cc.getForwarded()
 									.getForwardedPacket();
 							chatMessage = msg.getBody();
-							Log.d("lzctest", "new message:"+msg.getBody());
-							handleAutoReply(msg);
+//							Log.d("lzctest", "new message:"+msg.getBody());
+//							handleAutoReply(msg);
 							
 							// fall through
 						} else if (cc != null
@@ -312,12 +314,16 @@ public class SmackImpl implements Smack {
 						else
 							ts = System.currentTimeMillis();
 
-						String fromJID = getJabberID(msg.getFrom());
-
+						String fromJID = getJabberID(msg.getFrom());			
+					
 						addChatMessageToDB(ChatConstants.INCOMING, fromJID,
 								chatMessage, ChatConstants.DS_NEW, ts,
 								msg.getPacketID());
 						mService.newMessage(fromJID, chatMessage);
+						
+						Log.d("lzctest", " Message:"+msg);
+						handleAutoReply(msg);															
+						
 					}
 				} catch (Exception e) {
 					// SMACK silently discards exceptions dropped from
@@ -327,17 +333,18 @@ public class SmackImpl implements Smack {
 				}
 			}
 		};
-
+		
 		mXMPPConnection.addPacketListener(mPacketListener, filter);
 	}
 
 	protected void handleAutoReply(Message msg) {
 		// TODO Auto-generated method stub
 		
-//		if(ReplyMessage.needAutoReply(mService)){
-			
-			sendMessage(msg.getFrom(), ReplyMessage.getReplyMessage(msg.getBody()));						
-//		}		
+		if(ReplyMessage.needAutoReply(mService)){
+			String[] toJID = msg.getFrom().split("/");
+			String to = toJID[0];
+			sendMessage(to, ReplyMessage.getReplyMessage(msg.getBody()));						
+		}		
 	}
 
 	private void addChatMessageToDB(int direction, String JID, String message,
@@ -760,6 +767,11 @@ public class SmackImpl implements Smack {
 	private void addRosterEntry(String user, String alias, String group)
 			throws XXException {
 		mRoster = mXMPPConnection.getRoster();
+		
+		user = user+"@"+mXMPPConnection.getServiceName();
+		
+		System.out.println("lzctest->addRosterEntry:"+user);
+		L.d("lzctest","lzctest->addRosterEntry:"+user);
 		try {
 			mRoster.createEntry(user, alias, new String[] { group });
 		} catch (XMPPException e) {
@@ -888,6 +900,7 @@ public class SmackImpl implements Smack {
 	@Override
 	public void sendMessage(String toJID, String message) {
 		// TODO Auto-generated method stub
+		Log.d("lzctest","lzctest->sendMessage->toJID:"+toJID);
 		final Message newMessage = new Message(toJID, Message.Type.chat);
 		newMessage.setBody(message);
 		newMessage.addExtension(new DeliveryReceiptRequest());

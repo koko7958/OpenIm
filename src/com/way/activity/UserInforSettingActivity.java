@@ -72,7 +72,7 @@ public class UserInforSettingActivity extends Activity {
 	
       // refresh();
 		
-		mHeadIcon.setImageResource(R.drawable.wc_ic_sex_female);
+		mHeadIcon.setImageResource(R.drawable.login_default_avatar);
 		mNickView.setText(XMPPHelper.splitJidAndServer(PreferenceUtils.getPrefString(this, PreferenceConstants.MY_NICKNAME, "")));
 		mIMIDView.setText(XMPPHelper.splitJidAndServer(PreferenceUtils.getPrefString(this, PreferenceConstants.ACCOUNT, "")));
 		//mAdressView.setText(XMPPHelper.splitJidAndServer(PreferenceUtils.getPrefString(this, PreferenceConstants.ACCOUNT, "")));

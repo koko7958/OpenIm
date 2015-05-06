@@ -1,7 +1,7 @@
 package com.way.util;
 
 public class PreferenceConstants {
-	
+	public static final String DEFAULT_HOST = "pc201504121023 ";
 	public static final String GMAIL_SERVER = "koko3380.xicp.net";
 	public static final String DEFAULT_SERVER = "koko3380.xicp.net";	
 //	public static final String GMAIL_SERVER = "192.168.1.102";

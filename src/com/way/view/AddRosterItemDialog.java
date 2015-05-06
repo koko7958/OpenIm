@@ -75,14 +75,15 @@ public class AddRosterItemDialog extends AlertDialog implements
 	}
 
 	public void afterTextChanged(Editable s) {
-		try {
-			XMPPHelper.verifyJabberID(s);
-			okButton.setEnabled(true);
-			userInputField.setTextColor(XMPPHelper.getEditTextColor(mMainActivity));
-		} catch (XXAdressMalformedException e) {
-			okButton.setEnabled(false);
-			userInputField.setTextColor(Color.RED);
-		}
+		okButton.setEnabled(true);		
+//		try {
+//			XMPPHelper.verifyJabberID(s);
+//			okButton.setEnabled(true);
+//			userInputField.setTextColor(XMPPHelper.getEditTextColor(mMainActivity));
+//		} catch (XXAdressMalformedException e) {
+//			okButton.setEnabled(false);
+//			userInputField.setTextColor(Color.RED);
+//		}
 	}
 
 	public void beforeTextChanged(CharSequence s, int start, int count,

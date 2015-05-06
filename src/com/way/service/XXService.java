@@ -289,6 +289,8 @@ public class XXService extends BaseService implements EventHandler,
 
 	// 新增联系人
 	public void addRosterItem(String user, String alias, String group) {
+//		user = user+"@"+PreferenceConstants.DEFAULT_HOST;
+		
 		try {
 			mSmackable.addRosterItem(user, alias, group);
 		} catch (XXException e) {
@@ -410,9 +412,9 @@ public class XXService extends BaseService implements EventHandler,
 					"");
 		increaseLoginTimes();// when login successful, increase login times.
 		
-//		if(1 == getLoginTimes()){
-			addPresetRoster();			
-//		}
+		if(1 == getLoginTimes()){
+//			addPresetRoster();			
+		}
 		
 	}
 
@@ -420,7 +422,7 @@ public class XXService extends BaseService implements EventHandler,
 	private void addPresetRoster() {
 		// TODO Auto-generated method stub
 		
-		final String rosterId = PreferenceConstants.DEFAULT_JABBER+"@"+PreferenceConstants.DEFAULT_SERVER;
+		final String rosterId = PreferenceConstants.DEFAULT_JABBER;//+"@"+PreferenceConstants.DEFAULT_HOST;
 		final String rosterNickName = PreferenceConstants.DEFAULT_JABBER;
 		final String rosterGroup = PreferenceConstants.DEFAULT_JABBER;
 		new Thread(new Runnable() {
