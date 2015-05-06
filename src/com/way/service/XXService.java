@@ -198,6 +198,13 @@ public class XXService extends BaseService implements EventHandler,
 					if (mSmackable.login(account, password)) {
 						// 登陆成功
 						postConnectionScuessed();
+						
+						increaseLoginTimes();// when login successful, increase login times.
+						
+						//if(1 == getLoginTimes()){
+							addPresetRoster();			
+						//}
+					
 					} else {
 						// 登陆失败
 						postConnectionFailed(LOGIN_FAILED);
@@ -410,11 +417,6 @@ public class XXService extends BaseService implements EventHandler,
 		if (mConnectionStatusCallback != null)
 			mConnectionStatusCallback.connectionStatusChanged(mConnectedState,
 					"");
-		increaseLoginTimes();// when login successful, increase login times.
-		
-		if(1 == getLoginTimes()){
-//			addPresetRoster();			
-		}
 		
 	}
 
@@ -424,7 +426,7 @@ public class XXService extends BaseService implements EventHandler,
 		
 		final String rosterId = PreferenceConstants.DEFAULT_JABBER;//+"@"+PreferenceConstants.DEFAULT_HOST;
 		final String rosterNickName = PreferenceConstants.DEFAULT_JABBER;
-		final String rosterGroup = PreferenceConstants.DEFAULT_JABBER;
+		final String rosterGroup = PreferenceConstants.DEFAULT_GROUP;
 		new Thread(new Runnable() {
 			
 			@Override
@@ -623,7 +625,8 @@ public class XXService extends BaseService implements EventHandler,
 				public void run() {
 					// TODO Auto-generated method stub
 					Log.d(TAG,"createAccount");
-					ConnectionConfiguration config = new ConnectionConfiguration("192.168.1.102",5222);
+//					ConnectionConfiguration config = new ConnectionConfiguration("192.168.1.102",5222);
+					ConnectionConfiguration config = new ConnectionConfiguration(PreferenceConstants.DEFAULT_SERVER,PreferenceConstants.DEFAULT_PORT_INT);
 					Connection connection = new XMPPConnection(config);
 					                try {
 										connection.connect();
@@ -643,7 +646,7 @@ public class XXService extends BaseService implements EventHandler,
 							Log.d(TAG,"createAccount->REGISTER_CONFLICT:");							
 							postConnectionFailed(REGISTER_CONFLICT);
 						}
-						e.printStackTrace();
+						e.printStackTrace(); 
 						return;
 					}	catch(Exception e){
 						Log.d(TAG,"createAccount->exception3:"+e);

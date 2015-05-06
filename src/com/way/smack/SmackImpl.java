@@ -321,9 +321,13 @@ public class SmackImpl implements Smack {
 								msg.getPacketID());
 						mService.newMessage(fromJID, chatMessage);
 						
-						Log.d("lzctest", " Message:"+msg);
-						handleAutoReply(msg);															
+						Log.d("lzctest", "lzctest->Message->from:"+msg.getFrom());
+						Log.d("lzctest","lzctest->Message->getUer:"+mXMPPConnection.getUser());
 						
+						
+						if(!msg.getFrom().split("/")[0].equals(mXMPPConnection.getUser().split("/")[0])){
+							handleAutoReply(msg);															
+						}
 					}
 				} catch (Exception e) {
 					// SMACK silently discards exceptions dropped from

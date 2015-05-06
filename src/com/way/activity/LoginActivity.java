@@ -110,7 +110,7 @@ public class LoginActivity extends FragmentActivity implements
 						PreferenceConstants.ACCOUNT, ""))) {
 			mTipsViewRoot.setVisibility(View.GONE);
 		} else {
-			mTipsViewRoot.setVisibility(View.VISIBLE);
+//			mTipsViewRoot.setVisibility(View.VISIBLE);
 			PreferenceUtils.setPrefString(this,
 					PreferenceConstants.APP_VERSION,
 					getString(R.string.app_version));

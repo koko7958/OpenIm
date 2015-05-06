@@ -46,7 +46,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:background="@null"
-                        android:hint="jid@example.com"
+                        android:hint="请输入账号"
                         android:imeActionLabel="@string/next"
                         android:maxLength="50"
                         android:paddingBottom="6.0dip"
@@ -229,6 +229,7 @@
         android:id="@+id/login_help_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:visibility="gone"
         layout="@layout/login_help" />
 
 </FrameLayout>

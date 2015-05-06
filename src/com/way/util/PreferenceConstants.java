@@ -18,8 +18,8 @@ public class PreferenceConstants {
 	
 	public final static String APP_VERSION= "app_version";
 	
-	public final static String DEFAULT_JABBER = "jabber";
-	
+	public final static String DEFAULT_JABBER = "小丁";
+	public final static String DEFAULT_GROUP = "丁丁";	
 	
 	public final static String OFFLINE = "offline";
 	public final static String DND = "dnd";
