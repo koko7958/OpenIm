@@ -18,7 +18,7 @@
 	    android:layout_width="match_parent"
 		android:layout_height="fill_parent"
 		android:layout_marginTop="@dimen/title_bar_height"
-		android:layout_marginBottom="68dp"
+		android:layout_marginBottom="65dp"
 		android:orientation="vertical"    	    
 	    />
 <!-- 		android:layout_alignParentTop="true" -->
@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:layout_below="@id/fragment_container"
-        android:layout_marginTop="-68dp"
+        android:layout_marginTop="-65dp"
         android:background="#ff777777"
         android:text="" />      
 	<LinearLayout 
@@ -50,8 +50,8 @@
 	    	<ImageView
 	    	    android:id="@+id/button_navi_0_img"
 	    	    android:layout_marginTop="3dp"
-	    	    android:layout_width="46dp"
-	    	    android:layout_height="46dp"
+	    	    android:layout_width="44dp"
+	    	    android:layout_height="44dp"
 	    	    android:background="@drawable/button_navi_0"
 	    	    android:layout_gravity="center_horizontal"
 	    	    />
@@ -76,8 +76,8 @@
 	    	<ImageView
 	    	    android:id="@+id/button_navi_1_img"
 	    	    android:layout_marginTop="3dp"
-	    	    android:layout_width="46dp"
-	    	    android:layout_height="46dp"
+	    	    android:layout_width="44dp"
+	    	    android:layout_height="44dp"
 	    	    android:background="@drawable/button_navi_1"
 	    	    android:layout_gravity="center_horizontal"
 	    	    />
@@ -102,8 +102,8 @@
 	    	<ImageView
 	    	    android:id="@+id/button_navi_2_img"
 	    	    android:layout_marginTop="3dp"
-	    	    android:layout_width="46dp"
-	    	    android:layout_height="46dp"
+	    	    android:layout_width="44dp"
+	    	    android:layout_height="44dp"
 	    	    android:background="@drawable/button_navi_2"
 	    	    android:layout_gravity="center_horizontal"
 	    	    />

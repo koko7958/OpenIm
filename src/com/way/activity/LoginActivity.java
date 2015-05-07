@@ -349,7 +349,7 @@ public class LoginActivity extends FragmentActivity implements
 		}
 		if (connectedState == XXService.CONNECTED) {
 			save2Preferences();
-			startActivity(new Intent(this, MainActivity.class));
+			startActivity(new Intent(this, HomeActivity.class));
 			finish();
 		} else if (connectedState == XXService.DISCONNECTED)
 			T.showLong(LoginActivity.this, getString(R.string.request_failed)
