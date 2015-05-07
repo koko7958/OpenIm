@@ -6,9 +6,9 @@
     android:clickable="true"
     android:orientation="vertical" >
 
-    <include
-        layout="@layout/custom_commen_title"
-        android:focusable="true" />
+<!--     <include -->
+<!--         layout="@layout/custom_commen_title" -->
+<!--         android:focusable="true" /> -->
 
     <FrameLayout
         android:layout_width="match_parent"

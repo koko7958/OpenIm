@@ -1,6 +1,7 @@
 package com.way.fragment;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.ContentObserver;
@@ -8,7 +9,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -86,13 +87,13 @@ public class RecentChatFragment extends Fragment implements OnClickListener {
 	}
 
 	private void initView(View view) {
-		mTitleView = (TextView) view.findViewById(R.id.ivTitleName);
-		mTitleView.setText(R.string.recent_chat_fragment_title);
-		mTitleAddView = (ImageView) view
-				.findViewById(R.id.ivTitleBtnRightImage);
-		mTitleAddView.setImageResource(R.drawable.setting_add_account_white);
-		mTitleAddView.setVisibility(View.VISIBLE);
-		mTitleAddView.setOnClickListener(this);
+//		mTitleView = (TextView) view.findViewById(R.id.ivTitleName);
+//		mTitleView.setText(R.string.recent_chat_fragment_title);
+//		mTitleAddView = (ImageView) view
+//				.findViewById(R.id.ivTitleBtnRightImage);
+//		mTitleAddView.setImageResource(R.drawable.setting_add_account_white);
+//		mTitleAddView.setVisibility(View.VISIBLE);
+//		mTitleAddView.setOnClickListener(this);
 		mSwipeListView = (SwipeListView) view
 				.findViewById(R.id.recent_listview);
 		mSwipeListView.setEmptyView(view.findViewById(R.id.recent_empty));
@@ -139,19 +140,19 @@ public class RecentChatFragment extends Fragment implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.ivTitleBtnRightImage:
-			XXService xxService = mFragmentCallBack.getService();
-			if (xxService == null || !xxService.isAuthenticated()) {
-				return;
-			}
-			new AddRosterItemDialog(mFragmentCallBack.getMainActivity(),
-					xxService).show();// 添加联系人
-			break;
-
-		default:
-			break;
-		}
+//		switch (v.getId()) {
+//		case R.id.ivTitleBtnRightImage:
+//			XXService xxService = mFragmentCallBack.getService();
+//			if (xxService == null || !xxService.isAuthenticated()) {
+//				return;
+//			}
+//			new AddRosterItemDialog(mFragmentCallBack.getHomeActivity(),
+//					xxService).show();// 添加联系人
+//			break;
+//
+//		default:
+//			break;
+//		}
 	}
 
 }

@@ -21,6 +21,7 @@ import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.Presence.Mode;
+import org.jivesoftware.smack.packet.RosterPacket;
 import org.jivesoftware.smack.provider.ProviderManager;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.ServiceDiscoveryManager;
@@ -185,7 +186,7 @@ public class SmackImpl implements Smack {
 			SmackConfiguration.setKeepAliveInterval(-1);
 			SmackConfiguration.setDefaultPingInterval(0);
 			registerRosterListener();// 监听联系人动态变化
-//			registerSubscriptionListener();			
+			registerSubscriptionListener();			
 			mXMPPConnection.connect();
 			if (!mXMPPConnection.isConnected()) {
 				throw new XXException("SMACK connect failed without exception!");
@@ -557,7 +558,7 @@ public class SmackImpl implements Smack {
                 if (presence.getType().equals(Presence.Type.subscribe)) {
                 	Log.d(TAG,"PresenceListener->subscribe");
                 	
-                	Presence replyPresence = new Presence(Presence.Type.unsubscribe);//同意是
+                	Presence replyPresence = new Presence(Presence.Type.subscribe);//同意是
                 	replyPresence.setTo(presence.getFrom());
                 	replyPresence.setFrom(presence.getTo());
                 	mXMPPConnection.sendPacket(replyPresence);
@@ -583,6 +584,7 @@ public class SmackImpl implements Smack {
 				L.i("presenceChanged(" + presence.getFrom() + "): " + presence);
 				String jabberID = getJabberID(presence.getFrom());
 				RosterEntry rosterEntry = mRoster.getEntry(jabberID);
+				L.d("lzctest","lzctest->presenceChanged->status:"+rosterEntry.getStatus());				
 				updateRosterEntryInDB(rosterEntry);
 				mService.rosterChanged();
 			}
@@ -593,6 +595,7 @@ public class SmackImpl implements Smack {
 				L.i("entriesUpdated(" + entries + ")");
 				for (String entry : entries) {
 					RosterEntry rosterEntry = mRoster.getEntry(entry);
+					L.d("lzctest","lzctest->entriesUpdated->status:"+rosterEntry.getType());
 					updateRosterEntryInDB(rosterEntry);
 				}
 				mService.rosterChanged();
@@ -614,9 +617,14 @@ public class SmackImpl implements Smack {
 				int i = 0;
 				for (String entry : entries) {
 					RosterEntry rosterEntry = mRoster.getEntry(entry);
-					cvs[i++] = getContentValuesForRosterEntry(rosterEntry);
+					L.d("lzctest","lzctest->etriesAdded->status:"+rosterEntry.getStatus());
+					//lzc add
+					if(rosterEntry.getStatus() != RosterPacket.ItemStatus.SUBSCRIPTION_PENDING){
+					
+						cvs[i++] = getContentValuesForRosterEntry(rosterEntry);
+					}
 				}
-				mContentResolver.bulkInsert(RosterProvider.CONTENT_URI, cvs);
+//				mContentResolver.bulkInsert(RosterProvider.CONTENT_URI, cvs);
 				if (isFristRoter) {
 					isFristRoter = false;
 					mService.rosterChanged();

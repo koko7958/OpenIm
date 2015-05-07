@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.way.activity.HomeActivity;
 import com.way.activity.MainActivity;
 import com.way.exception.XXAdressMalformedException;
 import com.way.service.XXService;
@@ -21,7 +22,7 @@ import com.way.xx.R;
 public class AddRosterItemDialog extends AlertDialog implements
 		DialogInterface.OnClickListener, TextWatcher {
 
-	private MainActivity mMainActivity;
+	private HomeActivity mMainActivity;
 	private XXService mXxService;
 
 	private Button okButton;
@@ -29,7 +30,7 @@ public class AddRosterItemDialog extends AlertDialog implements
 	private EditText aliasInputField;
 	private GroupNameView mGroupNameView;
 
-	public AddRosterItemDialog(MainActivity mainActivity,
+	public AddRosterItemDialog(HomeActivity mainActivity,
 			XXService service) {
 		super(mainActivity);
 		mMainActivity = mainActivity;
@@ -53,7 +54,7 @@ public class AddRosterItemDialog extends AlertDialog implements
 				(DialogInterface.OnClickListener)null);
 
 	}
-	public AddRosterItemDialog(MainActivity mainActivity,
+	public AddRosterItemDialog(HomeActivity mainActivity,
 			XXService service, String jid) {
 		this(mainActivity, service);
 		userInputField.setText(jid);

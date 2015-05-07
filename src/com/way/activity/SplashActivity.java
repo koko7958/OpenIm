@@ -40,7 +40,7 @@ public class SplashActivity extends FragmentActivity {
 
 		@Override
 		public void run() {
-			startActivity(new Intent(SplashActivity.this, MainActivity.class));
+			startActivity(new Intent(SplashActivity.this, HomeActivity.class));
 			finish();
 		}
 	};

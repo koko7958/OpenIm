@@ -2,10 +2,10 @@ package com.way.fragment;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -93,8 +93,8 @@ public class SettingsFragment extends Fragment implements OnClickListener,
 		mExitConfirmBtn.setText(R.string.exit);
 		mExitCancleBtn.setOnClickListener(this);
 		mExitConfirmBtn.setOnClickListener(this);
-		mTitleNameView = (TextView) view.findViewById(R.id.ivTitleName);
-		mTitleNameView.setText(R.string.settings_fragment_title);
+//		mTitleNameView = (TextView) view.findViewById(R.id.ivTitleName);
+//		mTitleNameView.setText(R.string.settings_fragment_title);
 		mAccountSettingView = view.findViewById(R.id.accountSetting);
 		mAccountSettingView.setOnClickListener(this);
 		mHeadIcon = (ImageView) view.findViewById(R.id.face);
@@ -184,7 +184,7 @@ public class SettingsFragment extends Fragment implements OnClickListener,
 		case R.id.show_offline_roster_switch:
 			PreferenceUtils.setPrefBoolean(getActivity(),
 					PreferenceConstants.SHOW_OFFLINE, isChecked);
-			mFragmentCallBack.getMainActivity().updateRoster();
+//			mFragmentCallBack.getHomeActivity().updateRoster();
 			break;
 		case R.id.notify_run_background_switch:
 			PreferenceUtils.setPrefBoolean(getActivity(),

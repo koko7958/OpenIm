@@ -213,7 +213,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		mSlidingMenu.setSecondaryMenu(R.layout.main_right_layout);
 		FragmentTransaction mFragementTransaction = getSupportFragmentManager()
 				.beginTransaction();
-		Fragment mFrag = new SettingsFragment();
+		Fragment mFrag = null;//new SettingsFragment();
 		mFragementTransaction.replace(R.id.main_right_fragment, mFrag);
 		mFragementTransaction.commit();
 
@@ -334,8 +334,8 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 							break;
 						case 1:
 
-							new AddRosterItemDialog(MainActivity.this,
-									mXxService).show();// 添加联系人
+//							new AddRosterItemDialog(HomeActivity.this,
+//									mXxService).show();// 添加联系人
 							break;
 						default:
 							break;
@@ -408,7 +408,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		setBehindContentView(R.layout.main_left_layout);// 设置左菜单
 		FragmentTransaction mFragementTransaction = getSupportFragmentManager()
 				.beginTransaction();
-		Fragment mFrag = new RecentChatFragment();
+		Fragment mFrag = null;//= new RecentChatFragment();
 		mFragementTransaction.replace(R.id.main_left_fragment, mFrag);
 		mFragementTransaction.commit();
 		// customize the SlidingMenu
@@ -580,9 +580,9 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 							break;
 						}
 						mXxService.setStatusFromConfig();
-						SettingsFragment fragment = (SettingsFragment) getSupportFragmentManager()
-								.findFragmentById(R.id.main_right_fragment);
-						fragment.readData();
+//						SettingsFragment fragment = (SettingsFragment) getSupportFragmentManager()
+//								.findFragmentById(R.id.main_right_fragment);
+//						fragment.readData();
 					}
 				});
 		quickAction.show(v);
@@ -827,6 +827,12 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			T.showShort(MainActivity.this, "刷新成功!");
 			super.onPostExecute(result);
 		}
+	}
+
+	@Override
+	public HomeActivity getHomeActivity() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

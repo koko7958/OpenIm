@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    
+    <string name="button_navi_0">聊天</string>    
+    <string name="button_navi_1">好友</string>    
+    <string name="button_navi_2">账户</string>    
+    <string name="button_navi_3">其他</string>    
+    
+    
     <string name="coverview_tip">上滑可关闭此界面</string>
     <string name="pull_to_refresh_pull_label">下拉刷新…</string>
     <string name="pull_to_refresh_release_label">放开以刷新…</string>

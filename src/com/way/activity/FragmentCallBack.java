@@ -6,4 +6,6 @@ public interface FragmentCallBack {
 	public XXService getService();
 
 	public MainActivity getMainActivity();
+	
+	public HomeActivity getHomeActivity();
 }

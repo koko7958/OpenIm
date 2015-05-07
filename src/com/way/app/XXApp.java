@@ -27,9 +27,9 @@ public class XXApp extends Application {
 		mApplication = this;
 		L.isDebug = PreferenceUtils.getPrefBoolean(this,
 				PreferenceConstants.ISNEEDLOG, true);
-		if (PreferenceUtils.getPrefBoolean(this,
-				PreferenceConstants.REPORT_CRASH, true))
-			CrashHandler.getInstance().init(this);
+//		if (PreferenceUtils.getPrefBoolean(this,
+//				PreferenceConstants.REPORT_CRASH, true))
+//			CrashHandler.getInstance().init(this);
 		initFaceMap();
 	}
 
