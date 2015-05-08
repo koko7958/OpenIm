@@ -47,7 +47,7 @@ public class ContactAdapter extends SimpleCursorAdapter{
 		// we want all, online and offline
 		List<String[]> list = new ArrayList<String[]>();
 		Cursor cursor = mContentResolver.query(RosterProvider.CONTENT_URI,
-				ROSTER_QUERY, null, null, RosterConstants.ALIAS);
+				ROSTER_QUERY, RosterProvider.RosterConstants.TOP + "=?", new String[]{RosterProvider.TOP_NO}, RosterConstants.ALIAS);
 		
 		Cursor oldCursor = getCursor();		
 		

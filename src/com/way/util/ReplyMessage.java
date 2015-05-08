@@ -84,7 +84,7 @@ public class ReplyMessage{
 		}
 		
 		if(i == keySet.length){
-			return "(☆＿☆) 亲爱的，火星文jimi还不会呢，您可以教教我么";
+			return "(☆＿☆) 亲爱的，火星文小丁还不会呢，您可以教教我么";
 		}else{
 			return replyMap.get(keySet[i]);
 		}

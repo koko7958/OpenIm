@@ -4,6 +4,7 @@ import com.way.activity.ChatActivity;
 import com.way.activity.HomeActivity;
 import com.way.activity.MainActivity;
 import com.way.adapter.ContactAdapter;
+import com.way.adapter.TopContactAdapter;
 import com.way.swipelistview.SwipeListView;
 import com.way.xx.R;
 
@@ -26,7 +27,7 @@ public class ContactFragment extends Fragment{
 	private ListView rosterList;
 	
 	private ContactAdapter contactAdapter;
-	private SimpleCursorAdapter topAdapter;
+	private TopContactAdapter topAdapter;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,7 @@ public class ContactFragment extends Fragment{
 		
 		
 		contactAdapter = new ContactAdapter(ContactFragment.this.getActivity());
+		topAdapter = new TopContactAdapter(ContactFragment.this.getActivity());
 
 	}
 	
@@ -56,6 +58,23 @@ public class ContactFragment extends Fragment{
 		
 		topList = (ListView) view.findViewById(R.id.topList);
 		rosterList = (ListView) view.findViewById(R.id.rosterList);
+		
+		topList.setAdapter(topAdapter);
+		topList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+					long arg3) {
+				// TODO Auto-generated method stub
+				
+				String uId = topAdapter.getRoster(position).getJid();
+				String uName = topAdapter.getRoster(position).getAlias();
+				
+				startChatActivity(uId, uName);
+			}
+			
+		});
+		
 		
 		rosterList.setAdapter(contactAdapter);
 
@@ -82,7 +101,7 @@ public class ContactFragment extends Fragment{
 		super.onResume();
 		
 		((ContactAdapter) contactAdapter).requery();	
-		
+		topAdapter.requery();
 	}
 	
 	private void startChatActivity(String userJid, String userName) {

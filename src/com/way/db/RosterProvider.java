@@ -25,6 +25,11 @@ public class RosterProvider extends ContentProvider {
 	public static final String AUTHORITY = "com.way.xx.provider.Roster";
 	public static final String TABLE_ROSTER = "roster";
 	public static final String TABLE_GROUPS = "groups";
+	
+	public static final String TOP_YES = "yes";
+	public static final String TOP_NO = "no";
+	
+	
 	public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY
 			+ "/" + TABLE_ROSTER);
 	public static final Uri GROUPS_URI = Uri.parse("content://" + AUTHORITY
@@ -247,7 +252,7 @@ public class RosterProvider extends ContentProvider {
 	private static class RosterDatabaseHelper extends SQLiteOpenHelper {
 
 		private static final String DATABASE_NAME = "roster.db";
-		private static final int DATABASE_VERSION = 4;
+		private static final int DATABASE_VERSION = 5;
 
 		public RosterDatabaseHelper(Context context) {
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -265,6 +270,7 @@ public class RosterProvider extends ContentProvider {
 					+ RosterConstants.ALIAS + " TEXT, "
 					+ RosterConstants.STATUS_MODE + " INTEGER, "
 					+ RosterConstants.STATUS_MESSAGE + " TEXT, "
+					+ RosterConstants.TOP +" TEXT, "
 					+ RosterConstants.GROUP + " TEXT);");
 			db.execSQL("CREATE INDEX idx_roster_group ON " + TABLE_ROSTER
 					+ " (" + RosterConstants.GROUP + ")");
@@ -299,6 +305,7 @@ public class RosterProvider extends ContentProvider {
 		public static final String STATUS_MODE = "status_mode";
 		public static final String STATUS_MESSAGE = "status_message";
 		public static final String GROUP = "roster_group";
+		public static final String TOP = "top";
 
 		public static final String DEFAULT_SORT_ORDER = STATUS_MODE + " DESC, "
 				+ ALIAS + " COLLATE NOCASE";
@@ -310,6 +317,7 @@ public class RosterProvider extends ContentProvider {
 			tmpList.add(STATUS_MODE);
 			tmpList.add(STATUS_MESSAGE);
 			tmpList.add(GROUP);
+			tmpList.add(TOP);			
 			return tmpList;
 		}
 

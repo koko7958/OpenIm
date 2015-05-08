@@ -670,6 +670,14 @@ public class SmackImpl implements Smack {
 		values.put(RosterConstants.STATUS_MODE, getStatusInt(presence));
 		values.put(RosterConstants.STATUS_MESSAGE, presence.getStatus());
 		values.put(RosterConstants.GROUP, getGroup(entry.getGroups()));
+		
+		if(entry.getUser().split("@")[0].equals(PreferenceConstants.DEFAULT_JABBER)){
+			L.d("lzctest","lzctest->add top roster");
+			values.put(RosterConstants.TOP, RosterProvider.TOP_YES);
+		}else{
+			L.d("lzctest","lzctest->add not top roster");
+			values.put(RosterConstants.TOP, RosterProvider.TOP_NO);
+		}
 
 		return values;
 	}
