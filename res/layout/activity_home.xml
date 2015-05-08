@@ -49,9 +49,9 @@
 	        >
 	    	<ImageView
 	    	    android:id="@+id/button_navi_0_img"
-	    	    android:layout_marginTop="3dp"
-	    	    android:layout_width="40dp"
-	    	    android:layout_height="40dp"
+	    	    android:layout_marginTop="1dp"
+	    	    android:layout_width="42dp"
+	    	    android:layout_height="42dp"
 	    	    android:background="@drawable/button_navi_0"
 	    	    android:layout_gravity="center_horizontal"
 	    	    />
@@ -62,7 +62,8 @@
 	            android:text="@string/button_navi_0"
 	            android:layout_gravity="center_horizontal"
         		android:textColor="@color/black"
-				android:textSize="12sp"	    	            
+				android:textSize="12sp"	    	  
+				android:layout_marginBottom="2dp"          
 	            />
 
 	    </LinearLayout>
@@ -75,9 +76,9 @@
 	        >
 	    	<ImageView
 	    	    android:id="@+id/button_navi_1_img"
-	    	    android:layout_marginTop="3dp"
-	    	    android:layout_width="40dp"
-	    	    android:layout_height="40dp"
+	    	    android:layout_marginTop="1dp"
+	    	    android:layout_width="42dp"
+	    	    android:layout_height="42dp"
 	    	    android:background="@drawable/button_navi_1"
 	    	    android:layout_gravity="center_horizontal"
 	    	    />
@@ -89,6 +90,7 @@
 	            android:layout_gravity="center_horizontal"
         		android:textColor="@color/black"
 				android:textSize="12sp"	              
+				android:layout_marginBottom="2dp"     				
 	            />
 
 	    </LinearLayout>
@@ -101,9 +103,9 @@
 	        >
 	    	<ImageView
 	    	    android:id="@+id/button_navi_2_img"
-	    	    android:layout_marginTop="3dp"
-	    	    android:layout_width="40dp"
-	    	    android:layout_height="40dp"
+	    	    android:layout_marginTop="1dp"
+	    	    android:layout_width="42dp"
+	    	    android:layout_height="42dp"
 	    	    android:background="@drawable/button_navi_2"
 	    	    android:layout_gravity="center_horizontal"
 	    	    />
@@ -114,6 +116,7 @@
 	            android:text="@string/button_navi_2"
 	            android:layout_gravity="center_horizontal"
         		android:textColor="@color/black"
+				android:layout_marginBottom="2dp"     
 				android:textSize="12sp"	            
 	            />
 
