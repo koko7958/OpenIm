@@ -27,6 +27,7 @@ import android.util.Log;
 
 import com.way.activity.BaseActivity;
 import com.way.activity.BaseActivity.BackPressHandler;
+import com.way.activity.HomeActivity;
 import com.way.activity.LoginActivity;
 import com.way.activity.MainActivity;
 import com.way.app.XXBroadcastReceiver;
@@ -506,7 +507,7 @@ public class XXService extends BaseService implements EventHandler,
 				title, System.currentTimeMillis());
 		n.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
 
-		Intent notificationIntent = new Intent(this, MainActivity.class);
+		Intent notificationIntent = new Intent(this, HomeActivity.class);
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		n.contentIntent = PendingIntent.getActivity(this, 0,
 				notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);

@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.way.util.FileUtils;
+import com.way.adapter.RecentChatAdapter;
+import com.way.adapter.RosterAdapter;
 import com.way.app.XXBroadcastReceiver.EventHandler;
+import com.way.db.ChatProvider;
 import com.way.db.RosterProvider;
 import com.way.db.RosterProvider.RosterConstants;
 import com.way.fragment.ContactFragment;
@@ -31,17 +35,20 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.database.ContentObservable;
+import android.database.ContentObserver;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -53,19 +60,43 @@ FragmentCallBack {
 
 	private static final String TAG = "HomeActivity";
 	
-	private static final int MAX_FRAGMENT = 4;
+	private static final int MAX_FRAGMENT = 3;
 	
 	private static final int FRAGMENT_0 = 0;
 	private static final int FRAGMENT_1 = FRAGMENT_0+1;	
 	private static final int FRAGMENT_2 = FRAGMENT_0+2;		
-	private static final int FRAGMENT_3 = FRAGMENT_0+3;	
 	
 	private Fragment[] fragSet= new Fragment[MAX_FRAGMENT];
 	
 	private FragmentManager fragmentManager = null;
 	private Fragment currentFragment = null;
 
+//	private ImageView Btn_navi_0;	
+//	private ImageView Btn_navi_1;
+//	private ImageView Btn_navi_2;
+//	
+//	private Bitmap btn_navi_0_u; 
+//	private Bitmap btn_navi_0_s;
+//	private Bitmap btn_navi_1_u; 
+//	private Bitmap btn_navi_1_s;
+//	private Bitmap btn_navi_2_u; 
+//	private Bitmap btn_navi_2_s;	
 
+	
+	private Bitmap[] btnU = new Bitmap[MAX_FRAGMENT];
+	private Bitmap[] btnS = new Bitmap[MAX_FRAGMENT];	
+	
+	private ImageView[] btn = new ImageView[MAX_FRAGMENT];
+	
+	private TextView msgBadge;
+	private TextView friendsBadge;
+	
+	private RecentChatAdapter msgBadgeAdapter;
+	private RosterAdapter friendsBadgeAdapter;
+	public Handler mHandler = new Handler();
+	
+	private ContentResolver mContentResolver;
+	private ContentObserver msgObserver;
 	private static final int ID_CHAT = 0;
 	private static final int ID_AVAILABLE = 1;
 	private static final int ID_AWAY = 2;
@@ -401,6 +432,30 @@ FragmentCallBack {
 		// TODO Auto-generated method stub
 		return this;
 	}	
+
+	
+    private void initBtn() {
+		// TODO Auto-generated method stub
+    	
+    	
+    	btnU[FRAGMENT_0] = FileUtils.readBitMap(getApplicationContext(), R.drawable.button_navi_0_us);
+    	btnS[FRAGMENT_0] = FileUtils.readBitMap(getApplicationContext(), R.drawable.button_navi_0);    	
+    	
+    	btnU[FRAGMENT_1] = FileUtils.readBitMap(getApplicationContext(), R.drawable.button_navi_1_us);
+    	btnS[FRAGMENT_1] = FileUtils.readBitMap(getApplicationContext(), R.drawable.button_navi_1);    	
+    	
+    	btnU[FRAGMENT_2] = FileUtils.readBitMap(getApplicationContext(), R.drawable.button_navi_2_us);
+    	btnS[FRAGMENT_2] = FileUtils.readBitMap(getApplicationContext(), R.drawable.button_navi_2);    	    	
+		
+	}
+	
+	private void clearBtn(){
+		for(int i=0; i< btn.length; i++){
+			btn[i].setImageBitmap(btnU[i]);
+		}
+	}
+	
+	
 	
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -417,42 +472,45 @@ FragmentCallBack {
         
 //        txx.setText("敢美美容");
         
+        mContentResolver = getContentResolver();
+        
         initFragment();
-
-        fragmentManager = getFragmentManager();
-		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-		fragmentTransaction.add(R.id.fragment_container, fragSet[FRAGMENT_0]);
-		fragmentTransaction.commit();
+        initBtn();
 		
-		
-		View Btn_home = (View) findViewById(R.id.button_navi_0);
-		Btn_home.setOnClickListener(new OnClickListener() {
+		btn[FRAGMENT_0] = (ImageView) findViewById(R.id.button_navi_0_img);
+		findViewById(R.id.button_navi_0).setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				changeFragment(fragSet[FRAGMENT_0]);		
+				clearBtn();
+				btn[FRAGMENT_0].setImageBitmap(btnS[FRAGMENT_0]);				
 			}
 		});
 		
-		View Btn_news = (View) findViewById(R.id.button_navi_1);
-		Btn_news.setOnClickListener(new OnClickListener() {
+		btn[FRAGMENT_1] = (ImageView) findViewById(R.id.button_navi_1_img);
+		findViewById(R.id.button_navi_1).setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				changeFragment(fragSet[FRAGMENT_1]);		
+				changeFragment(fragSet[FRAGMENT_1]);	
+				clearBtn();
+				btn[FRAGMENT_1].setImageBitmap(btnS[FRAGMENT_1]);				
 			}
 		});
 		
 		
-		View Btn_bbs = (View) findViewById(R.id.button_navi_2);
-        Btn_bbs.setOnClickListener(new OnClickListener() {
+		btn[FRAGMENT_2] = (ImageView) findViewById(R.id.button_navi_2_img);
+		findViewById(R.id.button_navi_2).setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				changeFragment(fragSet[FRAGMENT_2]);
+				clearBtn();
+				btn[FRAGMENT_2].setImageBitmap(btnS[FRAGMENT_2]);
+				
 				// TODO Auto-generated method stub
 
 			}
@@ -483,8 +541,54 @@ FragmentCallBack {
 				.getPrefString(this, PreferenceConstants.ACCOUNT, "")));
 		mTitleNameView.setOnClickListener(this);		
 		
+		msgBadge = (TextView) findViewById(R.id.badge_0);
+		friendsBadge = (TextView) findViewById(R.id.badge_1);		
+		
+		msgBadge.setVisibility(View.GONE);
+		friendsBadge.setVisibility(View.GONE);
+		
+		msgBadgeAdapter = new RecentChatAdapter(this);
+		
+		msgObserver = new ContentObserver(mHandler) {
+			@Override
+			public void onChange(boolean selfChange) {
+				// TODO Auto-generated method stub
+				super.onChange(selfChange);
+				
+				msgBadgeAdapter.requery();
+				updateMsgBadge();
+			}
+			
+		};
+		
+		
+		mContentResolver.registerContentObserver(ChatProvider.CONTENT_URI, true, msgObserver);
+
+//		friendsBadgeAdapter = new RosterAdapter(this);		
+		
+        fragmentManager = getFragmentManager();
+		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+		fragmentTransaction.add(R.id.fragment_container, fragSet[FRAGMENT_0]);
+		fragmentTransaction.commit();
+		
+		clearBtn();
+		btn[FRAGMENT_0].setImageBitmap(btnS[FRAGMENT_0]);	
+		
 		
     }
+
+	protected void updateMsgBadge() {
+		// TODO Auto-generated method stub
+		if(msgBadgeAdapter.getUnreadMsgCount()>0){
+			msgBadge.setVisibility(View.VISIBLE);
+		}else{
+			msgBadge.setVisibility(View.GONE);
+		}
+
+		msgBadge.setText(new String().valueOf(msgBadgeAdapter.getUnreadMsgCount()));
+	}
+
 
 	@Override
 	protected void onStart() {
@@ -494,12 +598,20 @@ FragmentCallBack {
 		
 	}	
 
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		msgBadgeAdapter.requery();		
+		updateMsgBadge();
+	}
 
 	@Override
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
 		unbindXMPPService();
+		mContentResolver.unregisterContentObserver(msgObserver);
 	}
 	
     private void initFragment() {
@@ -524,4 +636,16 @@ FragmentCallBack {
 		fragmentTransaction.commit();    	
     }
  
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		for(int i=0; i<btn.length; i++){
+			btnU[i].recycle();
+			btnS[i].recycle();
+		}
+		
+	}
+	
 }

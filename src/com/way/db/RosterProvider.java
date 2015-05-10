@@ -29,6 +29,12 @@ public class RosterProvider extends ContentProvider {
 	public static final String TOP_YES = "yes";
 	public static final String TOP_NO = "no";
 	
+	public static final String DIRECTION_TO = "to";
+	public static final String DIRECTION_FROM = "from";
+	
+	public static final String SUBSCRIBE_PENDING = "pending";
+	public static final String SUBSCRIBE_ADDED = "added";
+	
 	
 	public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY
 			+ "/" + TABLE_ROSTER);
@@ -252,7 +258,7 @@ public class RosterProvider extends ContentProvider {
 	private static class RosterDatabaseHelper extends SQLiteOpenHelper {
 
 		private static final String DATABASE_NAME = "roster.db";
-		private static final int DATABASE_VERSION = 5;
+		private static final int DATABASE_VERSION = 6;
 
 		public RosterDatabaseHelper(Context context) {
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -271,6 +277,8 @@ public class RosterProvider extends ContentProvider {
 					+ RosterConstants.STATUS_MODE + " INTEGER, "
 					+ RosterConstants.STATUS_MESSAGE + " TEXT, "
 					+ RosterConstants.TOP +" TEXT, "
+					+ RosterConstants.DIRECTION +" TEXT, "
+					+ RosterConstants.SUBSCRIBE +" TEXT, "
 					+ RosterConstants.GROUP + " TEXT);");
 			db.execSQL("CREATE INDEX idx_roster_group ON " + TABLE_ROSTER
 					+ " (" + RosterConstants.GROUP + ")");
@@ -306,7 +314,10 @@ public class RosterProvider extends ContentProvider {
 		public static final String STATUS_MESSAGE = "status_message";
 		public static final String GROUP = "roster_group";
 		public static final String TOP = "top";
-
+		public static final String DIRECTION = "direction";
+		public static final String SUBSCRIBE = "subscribe";
+		
+		
 		public static final String DEFAULT_SORT_ORDER = STATUS_MODE + " DESC, "
 				+ ALIAS + " COLLATE NOCASE";
 
@@ -318,6 +329,8 @@ public class RosterProvider extends ContentProvider {
 			tmpList.add(STATUS_MESSAGE);
 			tmpList.add(GROUP);
 			tmpList.add(TOP);			
+			tmpList.add(DIRECTION);
+			tmpList.add(SUBSCRIBE);
 			return tmpList;
 		}
 

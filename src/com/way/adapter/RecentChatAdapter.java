@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -50,6 +51,43 @@ public class RecentChatAdapter extends SimpleCursorAdapter {
 		mContext.stopManagingCursor(oldCursor);
 	}
 
+	public int getUnreadMsgCount(){
+
+		Cursor cursor = this.getCursor();
+		Log.d("lzctest", "lzctest->RecentChatAdapter->getUnreadMsgCount->cursor count:"+cursor);
+		cursor.moveToFirst();
+		
+		int unreadCount = 0;
+		
+		while(!cursor.isAfterLast()){
+			String jid = cursor.getString(cursor
+					.getColumnIndex(ChatProvider.ChatConstants.JID));
+
+			Log.d("lzctest", "lzctest->RecentChatAdapter->getUnreadMsgCount->jid:"+jid);			
+			
+			String selection = ChatConstants.JID + " = '" + jid + "' AND "
+					+ ChatConstants.DIRECTION + " = " + ChatConstants.INCOMING
+					+ " AND " + ChatConstants.DELIVERY_STATUS + " = "
+					+ ChatConstants.DS_NEW;// 新消息数量字段
+			Cursor msgcursor = mContentResolver.query(ChatProvider.CONTENT_URI,
+					new String[] { "count(" + ChatConstants.PACKET_ID + ")",
+							ChatConstants.DATE, ChatConstants.MESSAGE }, selection,
+					null, SORT_ORDER);
+			msgcursor.moveToFirst();
+			int count = msgcursor.getInt(0);
+			
+			Log.d("lzctest", "lzctest->RecentChatAdapter->getUnreadMsgCount->count:"+count);				
+			
+			unreadCount += count;
+			
+			cursor.moveToNext();
+			
+		}
+		
+		return unreadCount;
+	}
+	
+	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		Cursor cursor = this.getCursor();

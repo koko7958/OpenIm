@@ -39,34 +39,60 @@
 		android:background="@color/white"
 	    android:orientation="horizontal">
     
-	    
-	    <LinearLayout
-	        android:id="@+id/button_navi_0"
+	    <FrameLayout
 	        android:layout_width="match_parent"
 	        android:layout_height="85dp"
-	        android:orientation="vertical"
-	        android:layout_weight="1"
+	       	android:layout_weight="1"
 	        >
-	    	<ImageView
-	    	    android:id="@+id/button_navi_0_img"
-	    	    android:layout_marginTop="1dp"
-	    	    android:layout_width="42dp"
-	    	    android:layout_height="42dp"
-	    	    android:background="@drawable/button_navi_0"
-	    	    android:layout_gravity="center_horizontal"
-	    	    />
+		    <LinearLayout
+		        android:id="@+id/button_navi_0"
+		        android:layout_width="match_parent"
+		        android:layout_height="85dp"
+		        android:orientation="vertical"
+		        android:layout_weight="1"
+		        >
+		    	<ImageView
+		    	    android:id="@+id/button_navi_0_img"
+		    	    android:layout_marginTop="1dp"
+		    	    android:layout_width="42dp"
+		    	    android:layout_height="42dp"
+		    	    android:background="@drawable/button_navi_0"
+		    	    android:layout_gravity="center_horizontal"
+		    	    />
+		        <TextView
+		            android:id="@+id/button_navi_0_txt"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:text="@string/button_navi_0"
+		            android:layout_gravity="center_horizontal"
+	        		android:textColor="@color/black"
+					android:textSize="12sp"	    	  
+					android:layout_marginBottom="2dp"          
+		            />
+		    </LinearLayout>
 	        <TextView
-	            android:id="@+id/button_navi_0_txt"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="@string/button_navi_0"
-	            android:layout_gravity="center_horizontal"
-        		android:textColor="@color/black"
-				android:textSize="12sp"	    	  
-				android:layout_marginBottom="2dp"          
-	            />
+	            android:id="@+id/badge_0"
+	            android:layout_width="16dip"
+	            android:layout_height="16.0dip"
+	            android:layout_marginRight="35.0dip"
+	            android:layout_marginTop="5.0dip"
+	            android:background="@drawable/list_newmessage2"
+	            android:layout_gravity="right"
+	            android:includeFontPadding="false"
+	            android:shadowColor="#19000000"
+	            android:shadowDy="1.0"
+	            android:shadowRadius="1.0"
+	            android:text="10"
+	            android:textColor="#ffffffff"
+	            android:textSize="10.0dip" />		    
+	    </FrameLayout>
 
-	    </LinearLayout>
+	    <FrameLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="85dp"
+	       	android:layout_weight="1"
+	        >	    
+	    	    
 	    <LinearLayout
 	        android:id="@+id/button_navi_1"
 	        android:layout_width="match_parent"
@@ -92,8 +118,25 @@
 				android:textSize="12sp"	              
 				android:layout_marginBottom="2dp"     				
 	            />
-
 	    </LinearLayout>
+	        <TextView
+	            android:id="@+id/badge_1"
+	            android:layout_width="16dip"
+	            android:layout_height="16.0dip"
+	            android:layout_marginRight="35.0dip"
+	            android:layout_marginTop="5.0dip"
+	            android:background="@drawable/list_newmessage2"
+	            android:layout_gravity="right"
+	            android:includeFontPadding="false"
+	            android:shadowColor="#19000000"
+	            android:shadowDy="1.0"
+	            android:shadowRadius="1.0"
+	            android:text="10"
+	            android:textColor="#ffffffff"
+	            android:textSize="10.0dip" />	        
+	        </FrameLayout>
+	        
+
 	    <LinearLayout
 	        android:id="@+id/button_navi_2"
 	        android:layout_width="match_parent"
