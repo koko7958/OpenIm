@@ -3,11 +3,13 @@ package com.way.fragment;
 import com.way.activity.ChatActivity;
 import com.way.activity.HomeActivity;
 import com.way.activity.MainActivity;
+import com.way.activity.NewFriendsActivity;
 import com.way.adapter.ContactAdapter;
 import com.way.adapter.TopContactAdapter;
 import com.way.swipelistview.SwipeListView;
 import com.way.xx.R;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
@@ -19,15 +21,21 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.ExpandableListView.OnChildClickListener;
+import android.widget.TextView;
 
-public class ContactFragment extends Fragment{
+public class ContactFragment extends BaseFragment{
 	private ListView topList;
 	private ListView rosterList;
+	private RelativeLayout newFriends;
+	private TextView unreadFriends;
 	
 	private ContactAdapter contactAdapter;
 	private TopContactAdapter topAdapter;
+	
+	private HomeActivity hActivity;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -58,6 +66,19 @@ public class ContactFragment extends Fragment{
 		
 		topList = (ListView) view.findViewById(R.id.topList);
 		rosterList = (ListView) view.findViewById(R.id.rosterList);
+		newFriends = (RelativeLayout) view.findViewById(R.id.new_friend);
+		unreadFriends = (TextView) view.findViewById(R.id.unreadFriends);
+		
+		newFriends.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(ContactFragment.this.getActivity(), NewFriendsActivity.class);
+				
+				startActivity(intent);
+			}
+		});
 		
 		topList.setAdapter(topAdapter);
 		topList.setOnItemClickListener(new OnItemClickListener() {
@@ -102,6 +123,10 @@ public class ContactFragment extends Fragment{
 		
 		((ContactAdapter) contactAdapter).requery();	
 		topAdapter.requery();
+		hActivity.requeryNewFriends();
+		hActivity.updateFriendsBadge();
+		
+		
 	}
 	
 	private void startChatActivity(String userJid, String userName) {
@@ -110,6 +135,26 @@ public class ContactFragment extends Fragment{
 		chatIntent.setData(userNameUri);
 		chatIntent.putExtra(ChatActivity.INTENT_EXTRA_USERNAME, userName);
 		startActivity(chatIntent);
+	}
+
+	@Override
+	public void onUpdateNewFriendsCount(int count) {
+		// TODO Auto-generated method stub
+		if(count > 0){
+//			unreadFriends。setVisibility(View.VISIBLE);
+			unreadFriends.setVisibility(View.VISIBLE);
+			unreadFriends.setText(Integer.valueOf(count).toString());
+		}else{
+			unreadFriends.setVisibility(View.GONE);
+		}
 	}		
 	
+	
+	@Override
+	public void onAttach(Activity activity) {
+		// TODO Auto-generated method stub
+		super.onAttach(activity);
+		hActivity = (HomeActivity) activity;
+		
+	}
 }

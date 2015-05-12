@@ -119,7 +119,10 @@ public class RosterProvider extends ContentProvider {
 
 	@Override
 	public Uri insert(Uri url, ContentValues initialValues) {
+		
+		Log.d("lzctest", "lzctest->RosterProvider->insert");
 		if (URI_MATCHER.match(url) != CONTACTS) {
+			Log.d("lzctest", "lzctest->RosterProvider->insert->Cannot insert into URL");
 			throw new IllegalArgumentException("Cannot insert into URL: " + url);
 		}
 
@@ -128,6 +131,7 @@ public class RosterProvider extends ContentProvider {
 
 		for (String colName : RosterConstants.getRequiredColumns()) {
 			if (values.containsKey(colName) == false) {
+				Log.d("lzctest", "lzctest->RosterProvider->insert->Missing column:");
 				throw new IllegalArgumentException("Missing column: " + colName);
 			}
 		}
@@ -137,6 +141,7 @@ public class RosterProvider extends ContentProvider {
 		long rowId = db.insert(TABLE_ROSTER, RosterConstants.JID, values);
 
 		if (rowId < 0) {
+			Log.d("lzctest", "lzctest->RosterProvider->insert->Failed to insert row into");
 			throw new SQLException("Failed to insert row into " + url);
 		}
 
@@ -211,6 +216,7 @@ public class RosterProvider extends ContentProvider {
 	@Override
 	public int update(Uri url, ContentValues values, String where,
 			String[] whereArgs) {
+		Log.d("lzctest","lzctest->RosterProvider->update->where:"+where+",whereArgs:"+whereArgs+",values:"+values);	
 		int count;
 		long rowId = 0;
 		int match = URI_MATCHER.match(url);
@@ -224,8 +230,10 @@ public class RosterProvider extends ContentProvider {
 			String segment = url.getPathSegments().get(1);
 			rowId = Long.parseLong(segment);
 			count = db.update(TABLE_ROSTER, values, "_id=" + rowId, whereArgs);
+			Log.d("lzctest","lzctest->RosterProvider->update");
 			break;
 		default:
+			Log.d("lzctest","lzctest->RosterProvider->update cannot update url");			
 			throw new UnsupportedOperationException("Cannot update URL: " + url);
 		}
 
@@ -258,7 +266,7 @@ public class RosterProvider extends ContentProvider {
 	private static class RosterDatabaseHelper extends SQLiteOpenHelper {
 
 		private static final String DATABASE_NAME = "roster.db";
-		private static final int DATABASE_VERSION = 6;
+		private static final int DATABASE_VERSION = 8;
 
 		public RosterDatabaseHelper(Context context) {
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -272,7 +280,8 @@ public class RosterProvider extends ContentProvider {
 					+ RosterConstants._ID
 					+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
 					+ RosterConstants.JID
-					+ " TEXT UNIQUE ON CONFLICT REPLACE, "
+//					+ " TEXT UNIQUE ON CONFLICT REPLACE, "
+					+ " TEXT UNIQUE, "
 					+ RosterConstants.ALIAS + " TEXT, "
 					+ RosterConstants.STATUS_MODE + " INTEGER, "
 					+ RosterConstants.STATUS_MESSAGE + " TEXT, "
@@ -324,13 +333,13 @@ public class RosterProvider extends ContentProvider {
 		public static ArrayList<String> getRequiredColumns() {
 			ArrayList<String> tmpList = new ArrayList<String>();
 			tmpList.add(JID);
-			tmpList.add(ALIAS);
-			tmpList.add(STATUS_MODE);
-			tmpList.add(STATUS_MESSAGE);
-			tmpList.add(GROUP);
-			tmpList.add(TOP);			
-			tmpList.add(DIRECTION);
-			tmpList.add(SUBSCRIBE);
+//			tmpList.add(ALIAS);
+//			tmpList.add(STATUS_MODE);
+//			tmpList.add(STATUS_MESSAGE);
+//			tmpList.add(GROUP);
+//			tmpList.add(TOP);			
+//			tmpList.add(DIRECTION);
+//			tmpList.add(SUBSCRIBE);
 			return tmpList;
 		}
 

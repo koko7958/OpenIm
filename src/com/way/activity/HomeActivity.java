@@ -5,12 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.way.util.FileUtils;
+import com.way.adapter.NewFriendsAdapter;
 import com.way.adapter.RecentChatAdapter;
 import com.way.adapter.RosterAdapter;
 import com.way.app.XXBroadcastReceiver.EventHandler;
 import com.way.db.ChatProvider;
 import com.way.db.RosterProvider;
 import com.way.db.RosterProvider.RosterConstants;
+import com.way.fragment.BaseFragment;
 import com.way.fragment.ContactFragment;
 import com.way.fragment.RecentChatFragment;
 import com.way.fragment.SettingsFragment;
@@ -54,7 +56,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
-public class HomeActivity extends Activity	implements
+public class HomeActivity extends MyBaseActivity	implements
 OnClickListener, IConnectionStatusCallback, EventHandler,
 FragmentCallBack {
 
@@ -66,10 +68,10 @@ FragmentCallBack {
 	private static final int FRAGMENT_1 = FRAGMENT_0+1;	
 	private static final int FRAGMENT_2 = FRAGMENT_0+2;		
 	
-	private Fragment[] fragSet= new Fragment[MAX_FRAGMENT];
+	private BaseFragment[] fragSet= new BaseFragment[MAX_FRAGMENT];
 	
 	private FragmentManager fragmentManager = null;
-	private Fragment currentFragment = null;
+	private BaseFragment currentFragment = null;
 
 //	private ImageView Btn_navi_0;	
 //	private ImageView Btn_navi_1;
@@ -92,11 +94,12 @@ FragmentCallBack {
 	private TextView friendsBadge;
 	
 	private RecentChatAdapter msgBadgeAdapter;
-	private RosterAdapter friendsBadgeAdapter;
+	private NewFriendsAdapter friendsBadgeAdapter;
 	public Handler mHandler = new Handler();
 	
 	private ContentResolver mContentResolver;
 	private ContentObserver msgObserver;
+	private ContentObserver friendsObserver;
 	private static final int ID_CHAT = 0;
 	private static final int ID_AVAILABLE = 1;
 	private static final int ID_AWAY = 2;
@@ -113,7 +116,7 @@ FragmentCallBack {
 		mStatusMap.put(PreferenceConstants.CHAT, R.drawable.status_qme);
 	}
 //	private Handler mainHandler = new Handler();
-	private XXService mXxService;
+//	private XXService mXxService;
 	private SlidingMenu mSlidingMenu;
 	private View mNetErrorView;
 	private TextView mTitleNameView;
@@ -549,6 +552,8 @@ FragmentCallBack {
 		
 		msgBadgeAdapter = new RecentChatAdapter(this);
 		
+		friendsBadgeAdapter = new NewFriendsAdapter(HomeActivity.this);
+		
 		msgObserver = new ContentObserver(mHandler) {
 			@Override
 			public void onChange(boolean selfChange) {
@@ -561,8 +566,20 @@ FragmentCallBack {
 			
 		};
 		
+		friendsObserver = new ContentObserver(mHandler) {
+			@Override
+			public void onChange(boolean selfChange) {
+				// TODO Auto-generated method stub
+				super.onChange(selfChange);
+				
+				friendsBadgeAdapter.requery();
+				updateFriendsBadge();
+			}
+			
+		};
 		
-		mContentResolver.registerContentObserver(ChatProvider.CONTENT_URI, true, msgObserver);
+		friendsBadgeAdapter = new NewFriendsAdapter(HomeActivity.this);
+		
 
 //		friendsBadgeAdapter = new RosterAdapter(this);		
 		
@@ -590,12 +607,30 @@ FragmentCallBack {
 	}
 
 
+	
+	public void updateFriendsBadge() {
+		// TODO Auto-generated method stub
+		if(friendsBadgeAdapter.getNewFriendsCount()>0){
+			friendsBadge.setVisibility(View.VISIBLE);
+		}else{
+			friendsBadge.setVisibility(View.GONE);
+		}
+
+		friendsBadge.setText(new String().valueOf(friendsBadgeAdapter.getNewFriendsCount()));
+		
+		if (fragSet[FRAGMENT_1] == currentFragment){
+			currentFragment.onUpdateNewFriendsCount(friendsBadgeAdapter.getNewFriendsCount());
+		}
+	}
+	
+
 	@Override
 	protected void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
 		bindXMPPService();
-		
+		mContentResolver.registerContentObserver(ChatProvider.CONTENT_URI, true, msgObserver);
+		mContentResolver.registerContentObserver(RosterProvider.CONTENT_URI, true, friendsObserver);		
 	}	
 
 	@Override
@@ -604,6 +639,9 @@ FragmentCallBack {
 		super.onResume();
 		msgBadgeAdapter.requery();		
 		updateMsgBadge();
+		friendsBadgeAdapter.requery();
+		updateFriendsBadge();
+		
 	}
 
 	@Override
@@ -612,6 +650,7 @@ FragmentCallBack {
 		super.onStop();
 		unbindXMPPService();
 		mContentResolver.unregisterContentObserver(msgObserver);
+		mContentResolver.unregisterContentObserver(friendsObserver);
 	}
 	
     private void initFragment() {
@@ -623,7 +662,7 @@ FragmentCallBack {
     	
 	}
 
-	private void changeFragment(Fragment fragment){
+	private void changeFragment(BaseFragment fragment){
 		
 		if(currentFragment != fragment){
 			currentFragment = fragment;
@@ -631,9 +670,11 @@ FragmentCallBack {
 			Log.d(TAG, "current fragment is this one, no need to change");
 		}
 		
-		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-		fragmentTransaction.replace(R.id.fragment_container, currentFragment);
-		fragmentTransaction.commit();    	
+		if(!currentFragment.isAdded()){
+			FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+			fragmentTransaction.replace(R.id.fragment_container, currentFragment);
+			fragmentTransaction.commit();    	
+		}
     }
  
 	
@@ -647,5 +688,16 @@ FragmentCallBack {
 		}
 		
 	}
+	
+	
+	public interface UpdateNewFriendsCallback{
+		public void onUpdateNewFriendsCount(int count);
+	}
+
+
+	public void requeryNewFriends(){
+		friendsBadgeAdapter.requery();
+	}
+	
 	
 }

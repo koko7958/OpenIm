@@ -23,6 +23,7 @@
         android:layout_alignBottom="@id/icon"
         android:layout_alignRight="@id/icon" 
         android:duplicateParentState="true"
+        android:visibility="gone"
         android:src="@drawable/status_online"/>
 	<ImageView 
 	    android:id="@+id/online_mode"
@@ -32,6 +33,7 @@
         android:src="@drawable/terminal_icon_ios_online"
         android:layout_alignParentRight="true"
            android:duplicateParentState="true"
+           android:visibility="gone"
 	    />
     <TextView
         android:id="@+id/contact_list_item_name"

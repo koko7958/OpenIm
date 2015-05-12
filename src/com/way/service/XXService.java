@@ -659,4 +659,17 @@ public class XXService extends BaseService implements EventHandler,
 				}
 			}).start();
 		}
+	
+	public void acceptNewFried(final String toId){
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				mSmackable.acceptNewFriends(toId);
+			}
+		}).start();
+
+	}
+	
 }

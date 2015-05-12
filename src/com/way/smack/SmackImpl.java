@@ -185,8 +185,8 @@ public class SmackImpl implements Smack {
 			SmackConfiguration.setPacketReplyTimeout(PACKET_TIMEOUT);
 			SmackConfiguration.setKeepAliveInterval(-1);
 			SmackConfiguration.setDefaultPingInterval(0);
-			registerRosterListener();// 监听联系人动态变化
-			registerSubscriptionListener();			
+//			registerRosterListener();// 监听联系人动态变化
+//			registerSubscriptionListener();			
 			mXMPPConnection.connect();
 			if (!mXMPPConnection.isConnected()) {
 				throw new XXException("SMACK connect failed without exception!");
@@ -235,6 +235,8 @@ public class SmackImpl implements Smack {
 		// actually, authenticated must be true now, or an exception must have
 		// been thrown.
 		if (isAuthenticated()) {
+			registerRosterListener();// 监听联系人动态变化
+			registerSubscriptionListener();						
 			registerMessageListener();
 			registerMessageSendFailureListener();
 			registerPongListener();
@@ -546,6 +548,44 @@ public class SmackImpl implements Smack {
 	}
 
 	/***************** end 发送离线消息 ***********************/
+
+	
+	public void acceptNewFriends(String toId){
+    	Presence replyPresence = new Presence(Presence.Type.subscribed);//同意是
+    	replyPresence.setTo(toId);//mXMPPConnection.getServiceName()
+    	replyPresence.setFrom(getMyUid());		
+    	
+    	Log.d("lzctest","lzctest->acceptNewFriends->toId:"+toId+", fromId:"+getMyUid());
+    	mXMPPConnection.sendPacket(replyPresence);
+//    	final ContentValues values = new ContentValues();
+//		values.put(RosterConstants.JID, toId);
+//
+//		values.put(RosterConstants.STATUS_MODE, getStatusInt(presence));
+//		values.put(RosterConstants.STATUS_MESSAGE, presence.getStatus());
+//		values.put(RosterConstants.GROUP, getGroup(entry.getGroups()));
+//		
+//		if("to".equals(entry.getType()) || "from".equals(entry.getType()) || "both".equals(entry.getType())){
+//			values.put(RosterConstants.SUBSCRIBE, RosterProvider.SUBSCRIBE_ADDED);
+//		}
+//		    	
+//    	
+//    	
+//    	
+//    	
+//		final ContentValues values = getContentValuesForRosterEntry(entry);
+//
+//		if (mContentResolver.update(RosterProvider.CONTENT_URI, values,
+//				RosterConstants.JID + " = ?", new String[] { entry.getUser() }) == 0)
+//			addRosterEntryToDB(entry);    	
+//    	
+    	
+	}
+	
+	
+	public String getMyUid(){
+		return mXMPPConnection.getUser();
+	}
+	
 	
 	public void registerSubscriptionListener() {      
 		PacketFilter packetFilter = new PacketTypeFilter(Presence.class);      
@@ -553,19 +593,38 @@ public class SmackImpl implements Smack {
 	     
             @Override      
             public void processPacket(Packet packet) {      
-            	Log.d(TAG,"PresenceListener->processPacket");
+            	Log.d(TAG,"lzctest->processPacket");
                 final Presence presence = (Presence)packet;      
                 if (presence.getType().equals(Presence.Type.subscribe)) {
-                	Log.d(TAG,"PresenceListener->subscribe");
-                	
-                	Presence replyPresence = new Presence(Presence.Type.subscribe);//同意是
-                	replyPresence.setTo(presence.getFrom());
-                	replyPresence.setFrom(presence.getTo());
-                	mXMPPConnection.sendPacket(replyPresence);
+                	Log.d(TAG,"lzctest->subscribe->jid:"+presence.getFrom());
+//                	Log.d(TAG,"accept new friend");
+//                	Presence replyPresence = new Presence(Presence.Type.subscribed);//同意是
+//                	replyPresence.setTo(presence.getFrom());
+//                	replyPresence.setFrom(presence.getTo());
+//                	mXMPPConnection.sendPacket(replyPresence);
+            		final ContentValues values = new ContentValues();
+
+            		values.put(RosterConstants.JID, presence.getFrom());
+            		
+            		values.put(RosterConstants.ALIAS, presence.getFrom());
+
+            		values.put(RosterConstants.STATUS_MODE, getStatusInt(presence));
+            		values.put(RosterConstants.STATUS_MESSAGE, presence.getStatus());
+            		values.put(RosterConstants.GROUP, "Friends");            		
+            		
+            		values.put(RosterConstants.DIRECTION, RosterProvider.DIRECTION_TO);
+            		values.put(RosterConstants.SUBSCRIBE, RosterProvider.SUBSCRIBE_PENDING);   
+
+            		values.put(RosterConstants.TOP, RosterProvider.TOP_NO);       			
+            		
+            		mContentResolver.insert(RosterProvider.CONTENT_URI, values);
                 	
                 } else if (presence.getType().equals(Presence.Type.unsubscribe)) {      
                 	Log.d(TAG,"PresenceListener->unsubscribe");
-                }      
+                } else if(presence.getType().equals(Presence.Type.subscribed)) {
+                	Log.d(TAG,"PresenceListener->subscribeddddddd->jid:"+presence.getFrom());
+                	updateSubscribeStateInDB(presence.getFrom(), true);
+                }    
   
             }      
                 
@@ -574,6 +633,11 @@ public class SmackImpl implements Smack {
 	}  
 	
 	/******************************* start 联系人数据库事件处理 **********************************/
+	
+	private static final String[] ROSTER_QUERY = new String[] {
+		RosterConstants._ID, RosterConstants.JID, RosterConstants.ALIAS,
+		RosterConstants.STATUS_MODE, RosterConstants.STATUS_MESSAGE, RosterConstants.DIRECTION};		
+	
 	private void registerRosterListener() {
 		mRoster = mXMPPConnection.getRoster();
 		mRosterListener = new RosterListener() {
@@ -581,10 +645,10 @@ public class SmackImpl implements Smack {
 
 			@Override
 			public void presenceChanged(Presence presence) {
-				L.i("presenceChanged(" + presence.getFrom() + "): " + presence);
+				L.i(TAG, "presenceChanged(" + presence.getFrom() + "): " + presence);
 				String jabberID = getJabberID(presence.getFrom());
 				RosterEntry rosterEntry = mRoster.getEntry(jabberID);
-				L.d("lzctest","lzctest->presenceChanged->status:"+rosterEntry.getStatus());				
+				L.d(TAG,"lzctest->presenceChanged->status:"+rosterEntry.getStatus());				
 				updateRosterEntryInDB(rosterEntry);
 				mService.rosterChanged();
 			}
@@ -592,18 +656,23 @@ public class SmackImpl implements Smack {
 			@Override
 			public void entriesUpdated(Collection<String> entries) {
 				// TODO Auto-generated method stub
-				L.i("entriesUpdated(" + entries + ")");
+				L.i(TAG, "entriesUpdated(" + entries + ")");
 				for (String entry : entries) {
 					RosterEntry rosterEntry = mRoster.getEntry(entry);
-					L.d("lzctest","lzctest->entriesUpdated->status:"+rosterEntry.getType());
+					L.d(TAG,"lzctest->entriesUpdated->status:"+rosterEntry.getType());
 					updateRosterEntryInDB(rosterEntry);
+					
+					if("to".equals(rosterEntry.getType()) || "from".equals(rosterEntry.getType()) || "both".equals(rosterEntry.getType())){
+						updateSubscribeStateInDB(rosterEntry.getUser(), true);
+					}
+					
 				}
 				mService.rosterChanged();
 			}
 
 			@Override
 			public void entriesDeleted(Collection<String> entries) {
-				L.i("entriesDeleted(" + entries + ")");
+				L.i(TAG, "lzctest->entriesDeleted(" + entries + ")");
 				for (String entry : entries) {
 					deleteRosterEntryFromDB(entry);
 				}
@@ -612,19 +681,38 @@ public class SmackImpl implements Smack {
 
 			@Override
 			public void entriesAdded(Collection<String> entries) {
-				L.i("entriesAdded(" + entries + ")");
+				L.i(TAG, "lzctest->entriesAdded(" + entries + ")");
 				ContentValues[] cvs = new ContentValues[entries.size()];
 				int i = 0;
 				for (String entry : entries) {
 					RosterEntry rosterEntry = mRoster.getEntry(entry);
-					L.d("lzctest","lzctest->etriesAdded->status:"+rosterEntry.getStatus());
+					L.d(TAG,"lzctest->etriesAdded->status:"+rosterEntry.getStatus());
 					//lzc add
-					if(rosterEntry.getStatus() != RosterPacket.ItemStatus.SUBSCRIPTION_PENDING){
-					
+//					if(rosterEntry.getStatus() != RosterPacket.ItemStatus.SUBSCRIPTION_PENDING){
+//					if("to".equals(rosterEntry.getStatus()) || "from".equals(rosterEntry.getStatus()) || "both".equals(rosterEntry.getStatus())){
 						cvs[i++] = getContentValuesForRosterEntry(rosterEntry);
-					}
+//					}
+						
+						Cursor cursor = mContentResolver.query(RosterProvider.CONTENT_URI,
+								ROSTER_QUERY, RosterProvider.RosterConstants.JID + "=?",
+								new String[]{rosterEntry.getUser()}, RosterConstants.ALIAS);
+						
+						if(cursor == null){
+							mContentResolver.insert(RosterProvider.CONTENT_URI, cvs[i-1]);
+						}else{
+						
+							cursor.moveToFirst();
+							if(RosterProvider.DIRECTION_TO.equals(cursor.getString(cursor.getColumnIndexOrThrow(RosterConstants.DIRECTION)))){
+								L.i(TAG, "lzctest->entriesAdded->DIRECTION_TO->user:"+rosterEntry.getUser());
+								updateSubscribeStateInDB(rosterEntry.getUser(), true);
+							}
+							cursor.close();
+						}
 				}
 //				mContentResolver.bulkInsert(RosterProvider.CONTENT_URI, cvs);
+				
+				
+				
 				if (isFristRoter) {
 					isFristRoter = false;
 					mService.rosterChanged();
@@ -632,7 +720,18 @@ public class SmackImpl implements Smack {
 			}
 		};
 		mRoster.addRosterListener(mRosterListener);
-//		mRoster.setSubscriptionMode(Roster.SubscriptionMode.accept_all);//设置添加联系人权限
+		
+		Log.d(TAG, "lzctest->sub->account:"+PreferenceUtils.getPrefString(mService, PreferenceConstants.ACCOUNT, null));
+		Log.d(TAG, "lzctest->sub->jabber:"+PreferenceConstants.DEFAULT_JABBER);
+		
+		
+		if(PreferenceUtils.getPrefString(mService, PreferenceConstants.ACCOUNT, null).equals(PreferenceConstants.DEFAULT_JABBER)){
+			Log.d(TAG, "lzctest->setSub->accept_all");
+			mRoster.setSubscriptionMode(Roster.SubscriptionMode.accept_all);//设置添加联系人权限 
+		}else{
+			Log.d(TAG, "lzctest->setSub->manual");			
+			mRoster.setSubscriptionMode(Roster.SubscriptionMode.manual);//设置添加联系人权限
+		}
 	}
 
 	private String getJabberID(String from) {
@@ -640,16 +739,36 @@ public class SmackImpl implements Smack {
 		return res[0].toLowerCase();
 	}
 
+	private void updateSubscribeStateInDB(String id, boolean isAdded){
+		Log.d(TAG,"lzctest->updateSubscribeStateInDB");	
+		ContentValues values = new ContentValues();
+		
+		if(isAdded){
+			values.put(RosterConstants.SUBSCRIBE, RosterProvider.SUBSCRIBE_ADDED);
+		}else{
+			return;
+		}
+		
+		if (mContentResolver.update(RosterProvider.CONTENT_URI, values,
+				RosterConstants.JID + " = ?", new String[] { id }) == 0){
+			Log.d("lzctest","lzctest->updateSubscribeStateInDB fail");	
+		}
+	}
+	
+	
 	private void updateRosterEntryInDB(final RosterEntry entry) {
 		final ContentValues values = getContentValuesForRosterEntry(entry);
 
 		if (mContentResolver.update(RosterProvider.CONTENT_URI, values,
-				RosterConstants.JID + " = ?", new String[] { entry.getUser() }) == 0)
+				RosterConstants.JID + " = ?", new String[] { entry.getUser() }) == 0){
+			Log.d(TAG,"lzctest->updateRosterEntryInDB fail");
 			addRosterEntryToDB(entry);
+		}			
 	}
 
 	private void addRosterEntryToDB(final RosterEntry entry) {
 		ContentValues values = getContentValuesForRosterEntry(entry);
+		Log.d(TAG,"lzctest->addRosterEntryToDB");
 		Uri uri = mContentResolver.insert(RosterProvider.CONTENT_URI, values);
 		L.i("addRosterEntryToDB: Inserted " + uri);
 	}
@@ -657,7 +776,7 @@ public class SmackImpl implements Smack {
 	private void deleteRosterEntryFromDB(final String jabberID) {
 		int count = mContentResolver.delete(RosterProvider.CONTENT_URI,
 				RosterConstants.JID + " = ?", new String[] { jabberID });
-		L.i("deleteRosterEntryFromDB: Deleted " + count + " entries");
+		L.i(TAG, "deleteRosterEntryFromDB: Deleted " + count + " entries");
 	}
 
 	private ContentValues getContentValuesForRosterEntry(final RosterEntry entry) {
@@ -671,17 +790,45 @@ public class SmackImpl implements Smack {
 		values.put(RosterConstants.STATUS_MESSAGE, presence.getStatus());
 		values.put(RosterConstants.GROUP, getGroup(entry.getGroups()));
 		
+//		if("to".equals(entry.getType()) || "from".equals(entry.getType()) || "both".equals(entry.getType())){
+//			L.d("lzctest","lzctest->added->getType():"+entry.getType());			
+//			values.put(RosterConstants.SUBSCRIBE, RosterProvider.SUBSCRIBE_ADDED);
+//		}else{
+//			values.put(RosterConstants.SUBSCRIBE, RosterProvider.SUBSCRIBE_PENDING);
+//		}
+		
+//		values.put(RosterConstants.DEFAULT_SORT_ORDER, RosterProvider.DIRECTION_FROM);
+		
 		if(entry.getUser().split("@")[0].equals(PreferenceConstants.DEFAULT_JABBER)){
-			L.d("lzctest","lzctest->add top roster");
+			L.d(TAG,"lzctest->add top roster");
 			values.put(RosterConstants.TOP, RosterProvider.TOP_YES);
 		}else{
-			L.d("lzctest","lzctest->add not top roster");
+			L.d(TAG,"lzctest->add not top roster");
 			values.put(RosterConstants.TOP, RosterProvider.TOP_NO);
 		}
 
 		return values;
 	}
 
+//	private ContentValues getContentValuesForNewFriends(final RosterEntry entry){
+//		final ContentValues values = new ContentValues();
+//
+//		values.put(RosterConstants.JID, entry.getUser());
+//		values.put(RosterConstants.ALIAS, getName(entry));
+//
+//		Presence presence = mRoster.getPresence(entry.getUser());
+//		values.put(RosterConstants.STATUS_MODE, getStatusInt(presence));
+//		values.put(RosterConstants.STATUS_MESSAGE, presence.getStatus());
+//		values.put(RosterConstants.GROUP, getGroup(entry.getGroups()));
+//		values.put(RosterConstants.SUBSCRIBE, RosterProvider.SUBSCRIBE_ADDED);
+//		values.put(RosterConstants.DIRECTION, entry.getStatus());
+//		
+//		
+//		
+//		return values;
+//	}
+//	
+	
 	private String getGroup(Collection<RosterGroup> groups) {
 		for (RosterGroup group : groups) {
 			return group.getName();

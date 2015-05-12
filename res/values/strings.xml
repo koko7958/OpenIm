@@ -1364,6 +1364,9 @@
     <string name="press_again_backrun">再按一次返回桌面</string>
     <string name="way_email_address">way.ping.li@gmail.com</string>
     <string name="settings_fragment_title">设  置</string>
+    <string name="new_friends_title">新的朋友</string>    
+    <string name="subscribe_accept">接受</string>   
+    <string name="subscribe_added">已添加</string>         
     <string name="recent_chat_fragment_title">最近会话</string>
     <string name="app_version">V1.0.0</string>
 

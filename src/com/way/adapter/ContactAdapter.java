@@ -71,8 +71,14 @@ public class ContactAdapter extends SimpleCursorAdapter{
 		Roster roster = new Roster();
 		roster.setJid(cursor.getString(cursor
 				.getColumnIndexOrThrow(RosterConstants.JID)));
-		roster.setAlias(cursor.getString(cursor
-				.getColumnIndexOrThrow(RosterConstants.ALIAS)));
+
+		String alias[] = cursor.getString(cursor
+				.getColumnIndexOrThrow(RosterConstants.ALIAS)).split("@");
+		
+		roster.setAlias(alias[0]);		
+		
+//		roster.setAlias(cursor.getString(cursor
+//				.getColumnIndexOrThrow(RosterConstants.ALIAS)));
 		roster.setStatus_message(cursor.getString(cursor
 				.getColumnIndexOrThrow(RosterConstants.STATUS_MESSAGE)));
 		roster.setStatusMode(cursor.getString(cursor
@@ -105,11 +111,14 @@ public class ContactAdapter extends SimpleCursorAdapter{
 		}
 		holder.nickView.setText(roster.getAlias());
 
-		holder.statusMsgView.setText(TextUtils.isEmpty(roster
-				.getStatusMessage()) ? mContext.getString(R.string.status_offline) : roster.getStatusMessage());
-		setViewImage(holder.onlineModeView, holder.headView, holder.statusView,
-				roster.getStatusMode());
+//		holder.statusMsgView.setText(TextUtils.isEmpty(roster
+//				.getStatusMessage()) ? mContext.getString(R.string.status_offline) : roster.getStatusMessage());
 
+		holder.statusMsgView.setText(roster.getJid());
+		
+		setViewImage(holder.onlineModeView, holder.headView, holder.statusView,
+				roster.getStatusMode());		
+		
 		convertView.setTag(R.id.xxx01, position);
 //		convertView.setTag(R.id.xxx02, childPosition);
 //		cursor.close();
@@ -205,8 +214,13 @@ public class ContactAdapter extends SimpleCursorAdapter{
 
 			roster.setJid(cursor.getString(cursor
 					.getColumnIndexOrThrow(RosterConstants.JID)));
-			roster.setAlias(cursor.getString(cursor
-					.getColumnIndexOrThrow(RosterConstants.ALIAS)));
+			
+			String alias[] = cursor.getString(cursor
+					.getColumnIndexOrThrow(RosterConstants.ALIAS)).split("@");
+			
+			roster.setAlias(alias[0]);
+//			roster.setAlias(cursor.getString(cursor
+//					.getColumnIndexOrThrow(RosterConstants.ALIAS)));
 			roster.setStatus_message(cursor.getString(cursor
 					.getColumnIndexOrThrow(RosterConstants.STATUS_MESSAGE)));
 			roster.setStatusMode(cursor.getString(cursor

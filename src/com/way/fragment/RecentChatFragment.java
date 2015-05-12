@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.way.activity.ChatActivity;
 import com.way.activity.FragmentCallBack;
+import com.way.activity.HomeActivity;
 import com.way.adapter.RecentChatAdapter;
 import com.way.db.ChatProvider;
 import com.way.db.ChatProvider.ChatConstants;
@@ -30,7 +31,7 @@ import com.way.util.XMPPHelper;
 import com.way.view.AddRosterItemDialog;
 import com.way.xx.R;
 
-public class RecentChatFragment extends Fragment implements OnClickListener {
+public class RecentChatFragment extends BaseFragment{
 
 	private Handler mainHandler = new Handler();
 	private ContentObserver mChatObserver = new ChatObserver();
@@ -138,21 +139,27 @@ public class RecentChatFragment extends Fragment implements OnClickListener {
 		}
 	};
 
+//	@Override
+//	public void onClick(View v) {
+////		switch (v.getId()) {
+////		case R.id.ivTitleBtnRightImage:
+////			XXService xxService = mFragmentCallBack.getService();
+////			if (xxService == null || !xxService.isAuthenticated()) {
+////				return;
+////			}
+////			new AddRosterItemDialog(mFragmentCallBack.getHomeActivity(),
+////					xxService).show();// 添加联系人
+////			break;
+////
+////		default:
+////			break;
+////		}
+//	}
+
 	@Override
-	public void onClick(View v) {
-//		switch (v.getId()) {
-//		case R.id.ivTitleBtnRightImage:
-//			XXService xxService = mFragmentCallBack.getService();
-//			if (xxService == null || !xxService.isAuthenticated()) {
-//				return;
-//			}
-//			new AddRosterItemDialog(mFragmentCallBack.getHomeActivity(),
-//					xxService).show();// 添加联系人
-//			break;
-//
-//		default:
-//			break;
-//		}
+	public void onUpdateNewFriendsCount(int count) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

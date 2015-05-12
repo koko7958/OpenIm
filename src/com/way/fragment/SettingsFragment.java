@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.way.activity.AboutActivity;
 import com.way.activity.FeedBackActivity;
 import com.way.activity.FragmentCallBack;
+import com.way.activity.HomeActivity;
 import com.way.activity.LoginActivity;
 import com.way.activity.MainActivity;
 import com.way.service.XXService;
@@ -38,8 +39,9 @@ import com.way.xx.R;
 import com.way.activity.UserInforSettingActivity;
 
 
-public class SettingsFragment extends Fragment implements OnClickListener,
-		OnCheckedChangeListener {
+public class SettingsFragment extends BaseFragment implements OnClickListener,
+		OnCheckedChangeListener, 
+		HomeActivity.UpdateNewFriendsCallback{
 	private TextView mTitleNameView;
 	private View mAccountSettingView;
 	private ImageView mHeadIcon;
@@ -324,5 +326,11 @@ public class SettingsFragment extends Fragment implements OnClickListener,
 								dialog.dismiss();
 							}
 						}).create().show();
+	}
+
+	@Override
+	public void onUpdateNewFriendsCount(int count) {
+		// TODO Auto-generated method stub
+		
 	}
 }
