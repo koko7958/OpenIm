@@ -721,16 +721,17 @@ public class SmackImpl implements Smack {
 		};
 		mRoster.addRosterListener(mRosterListener);
 		
-		Log.d(TAG, "lzctest->sub->account:"+PreferenceUtils.getPrefString(mService, PreferenceConstants.ACCOUNT, null));
-		Log.d(TAG, "lzctest->sub->jabber:"+PreferenceConstants.DEFAULT_JABBER);
-		
-		
-		if(PreferenceUtils.getPrefString(mService, PreferenceConstants.ACCOUNT, null).equals(PreferenceConstants.DEFAULT_JABBER)){
-			Log.d(TAG, "lzctest->setSub->accept_all");
-			mRoster.setSubscriptionMode(Roster.SubscriptionMode.accept_all);//设置添加联系人权限 
-		}else{
-			Log.d(TAG, "lzctest->setSub->manual");			
-			mRoster.setSubscriptionMode(Roster.SubscriptionMode.manual);//设置添加联系人权限
+
+		String[] user = mXMPPConnection.getUser().split("@");
+		if(user != null && user.length > 0){
+			Log.d(TAG, "lzctest->before sub->getUser:"+user[0] +", default user:"+PreferenceConstants.DEFAULT_JABBER);
+			if(PreferenceConstants.DEFAULT_JABBER.equals(user[0])){
+				Log.d(TAG, "lzctest->setSub->accept_all");
+				mRoster.setSubscriptionMode(Roster.SubscriptionMode.accept_all);//设置添加联系人权限 
+			}else{
+				Log.d(TAG, "lzctest->setSub->manual");			
+				mRoster.setSubscriptionMode(Roster.SubscriptionMode.manual);//设置添加联系人权限
+			}
 		}
 	}
 
