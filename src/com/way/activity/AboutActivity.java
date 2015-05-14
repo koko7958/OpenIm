@@ -16,3 +16,5 @@ public class AboutActivity extends SwipeBackActivity {
 		Linkify.addLinks(tv, Linkify.ALL);
 	}
 }
+
+
