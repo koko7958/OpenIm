@@ -686,31 +686,29 @@ public class SmackImpl implements Smack {
 				int i = 0;
 				for (String entry : entries) {
 					RosterEntry rosterEntry = mRoster.getEntry(entry);
-					L.d(TAG,"lzctest->etriesAdded->status:"+rosterEntry.getStatus());
-					//lzc add
-//					if(rosterEntry.getStatus() != RosterPacket.ItemStatus.SUBSCRIPTION_PENDING){
-//					if("to".equals(rosterEntry.getStatus()) || "from".equals(rosterEntry.getStatus()) || "both".equals(rosterEntry.getStatus())){
-						cvs[i++] = getContentValuesForRosterEntry(rosterEntry);
-//					}
+
+					cvs[i++] = getContentValuesForRosterEntry(rosterEntry);
 						
-						Cursor cursor = mContentResolver.query(RosterProvider.CONTENT_URI,
-								ROSTER_QUERY, RosterProvider.RosterConstants.JID + "=?",
-								new String[]{rosterEntry.getUser()}, RosterConstants.ALIAS);
-						
-						if(cursor == null){
-							mContentResolver.insert(RosterProvider.CONTENT_URI, cvs[i-1]);
-						}else{
-						
-							cursor.moveToFirst();
-							if(RosterProvider.DIRECTION_TO.equals(cursor.getString(cursor.getColumnIndexOrThrow(RosterConstants.DIRECTION)))){
-								L.i(TAG, "lzctest->entriesAdded->DIRECTION_TO->user:"+rosterEntry.getUser());
-								updateSubscribeStateInDB(rosterEntry.getUser(), true);
-							}
-							cursor.close();
-						}
-				}
-//				mContentResolver.bulkInsert(RosterProvider.CONTENT_URI, cvs);
-				
+					Cursor cursor = mContentResolver.query(RosterProvider.CONTENT_URI,
+							ROSTER_QUERY, RosterProvider.RosterConstants.JID + "=?",
+							new String[]{rosterEntry.getUser()}, RosterConstants.ALIAS);
+		
+					if(!cursor.moveToFirst()){
+						L.i(TAG, "lzctest->entriesAdded->cursor.moveToFirst fail");
+						mContentResolver.insert(RosterProvider.CONTENT_URI, cvs[i-1]);
+					}
+
+					L.i(TAG, "lzctest->entriesAdded>user:"+rosterEntry.getUser()+",  type:"+rosterEntry.getType().toString());
+								
+					if("to".equals(rosterEntry.getType().toString()) || "from".equals(rosterEntry.getType().toString()) || "both".equals(rosterEntry.getType().toString())){
+						L.i(TAG, "lzctest->entriesAdded->updateSubscribeStateInDB");
+						updateSubscribeStateInDB(rosterEntry.getUser(), true);
+					}
+					
+					if(cursor != null){
+						cursor.close();
+					}
+				}	
 				
 				
 				if (isFristRoter) {

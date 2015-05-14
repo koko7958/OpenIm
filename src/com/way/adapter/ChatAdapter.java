@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,7 @@ public class ChatAdapter extends SimpleCursorAdapter {
 	private static final int DELAY_NEWMSG = 2000;
 	private Context mContext;
 	private LayoutInflater mInflater;
-
+	private static String TAG = "ChatAdapter";
 	public ChatAdapter(Context context, Cursor cursor, String[] from) {
 		// super(context, android.R.layout.simple_list_item_1, cursor, from,
 		// to);
@@ -106,7 +107,19 @@ public class ChatAdapter extends SimpleCursorAdapter {
 
 	private void bindViewData(ViewHolder holder, String date, boolean from_me,
 			String from, String message, int delivery_status) {
-		holder.avatar.setBackgroundResource(R.drawable.login_default_avatar);
+		
+		String[] user = from.split("@");
+		if(user.length>0){
+			Log.d(TAG, "lzctest->bindViewData->from:"+user[0] +" , DEFAULT_JABBER:"+PreferenceConstants.DEFAULT_JABBER);
+		}else{
+			Log.d(TAG, "lzctest->bindViewData->from null");
+		}
+		
+//		if(user.length>0 && PreferenceConstants.DEFAULT_JABBER.equals(user[0])){
+//			holder.avatar.setBackgroundResource(R.drawable.login_default_jabber);						
+//		}else{
+			holder.avatar.setBackgroundResource(R.drawable.login_default_avatar);
+//		}
 		if (from_me
 				&& !PreferenceUtils.getPrefBoolean(mContext,
 						PreferenceConstants.SHOW_MY_HEAD, true)) {
